@@ -1,51 +1,55 @@
 import 'package:flutter/material.dart';
-import 'home_view.dart';  // 👈 La vista a donde irá después
+import 'home_view.dart'; 
 
 class FirstView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,  // Fondo blanco
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // 🖼️ MOSTRAR EL LOGO
-            Image.asset(
-              'assets/images/Velisse-Logo.png',  // 👈 Ruta de tu imagen
-              width: 200,                 // Ancho del logo
-              height: 200,                // Alto del logo
+      backgroundColor: Colors.white,
+      // Usamos Stack para que el botón ocupe TODA la pantalla por detrás
+      body: Stack(
+        children: [
+          // 1. EL BOTÓN QUE OCUPA TODO
+          GestureDetector(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomeView()),
+              );
+            },
+            child: Container(
+              color: Colors.transparent, // Importante para que detecte el tap en lo vacío
+              width: double.infinity,
+              height: double.infinity,
             ),
-            
-            SizedBox(height: 50),  // Espacio entre logo y botón
-            
-            // 🔘 BOTÓN PARA ENTRAR
-            GestureDetector(
-              onTap: () {
-                // Navegar a la siguiente pantalla
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeView()),
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Text(
-                  'Entrar',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+          ),
+          
+          // 2. EL CONTENIDO VISUAL (Logo y texto)
+          // Ignora los toques para que pasen al GestureDetector de abajo
+          IgnorePointer(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/Velisse-Logo.png',
+                    width: 200,
+                    height: 200,
                   ),
-                ),
+                  const SizedBox(height: 20), // Espacio entre logo y texto
+                  const Text(
+                    'Toca para entrar',
+                    style: TextStyle(
+                      color: Colors.black54, // Cambiado a gris para que se vea en blanco
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
