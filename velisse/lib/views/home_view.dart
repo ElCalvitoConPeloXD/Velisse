@@ -6,10 +6,6 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bienvenido'),
-        backgroundColor: Colors.blue,
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -25,9 +21,69 @@ class HomeView extends StatelessWidget {
                 fillColor: Colors.grey.shade200,
               ),
             ),
+            SizedBox(height: 20),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 3),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            'assets/images/barberia.png',
+                            height: constraints.maxWidth * 0.2, // Altura dinámica basada en el ancho
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            'assets/images/uñas.png',
+                            height: constraints.maxWidth * 0.2,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            'assets/images/peluqueria.png',
+                            height: constraints.maxWidth * 0.2,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            'assets/images/Facial.png',
+                            height: constraints.maxWidth * 0.2,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: 20),
             CarouselSlider(
               options: CarouselOptions(
-                height: 200,
+                height: 150,
                 autoPlay: true,
                 viewportFraction: 0.65,
               ),
@@ -37,8 +93,8 @@ class HomeView extends StatelessWidget {
                 'assets/images/img3.png',
               ].map((imagePath) {
                 return SizedBox(
-                  width: 200,
-                  height: 200,
+                  width: 150,
+                  height: 150,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: Image.asset(imagePath, fit: BoxFit.cover, width: double.infinity),

@@ -10,7 +10,7 @@ class AppBackground extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.white,Colors.purple, Colors.white],
+            colors: [Colors.purple.shade100,Colors.white,Colors.purple.shade100],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
