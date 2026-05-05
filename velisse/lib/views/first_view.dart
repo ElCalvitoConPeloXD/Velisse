@@ -5,7 +5,7 @@ import 'package:velisse/widgets/fondo.dart';
 class FirstView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
+    return AppBackgroundfirst(
       child: Stack(
         children: [
           // 1. EL BOTÓN QUE OCUPA TODO
