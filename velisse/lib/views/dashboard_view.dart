@@ -1,0 +1,329 @@
+// 👉 Importa el sistema visual de Flutter (widgets, diseño, etc.)
+import 'package:flutter/material.dart';
+
+// 👉 Importa la pantalla de configuración
+import 'configuracion_negocio_view.dart';
+
+// 👉 Importa la pantalla de calendario
+import 'calendario_view.dart';
+
+
+// 👉 Widget principal del dashboard (pantalla inicial)
+class DashboardView extends StatefulWidget {
+
+  // 👉 Constructor
+  const DashboardView({super.key});
+
+  @override
+  State<DashboardView> createState() => _DashboardViewState();
+  // 👉 Crea el estado asociado
+}
+
+
+// 👉 Clase que maneja la lógica del dashboard
+class _DashboardViewState extends State<DashboardView> {
+
+  // 👉 Índice del icono seleccionado en la barra inferior
+  int _currentIndex = 0; // 👉 0 = HOME por defecto
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      // 👉 Estructura base de la pantalla
+
+      body: Stack(
+        // 👉 Permite superponer fondo + contenido
+
+        children: [
+
+          // 🌄 IMAGEN DE FONDO
+          Positioned.fill(
+            // 👉 Ocupa toda la pantalla
+
+            child: Image.asset(
+              'assets/images/Velisse.png',
+              // 👉 Ruta de la imagen
+
+              fit: BoxFit.cover,
+              // 👉 Ajusta la imagen sin deformarla
+            ),
+          ),
+
+          // 🔝 CONTENIDO PRINCIPAL
+          SafeArea(
+            // 👉 Evita notch y barra superior
+
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              // 👉 Margen lateral
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+
+                  const SizedBox(height: 10),
+
+                  // 🧠 TÍTULO
+                  const Text(
+                    "Inicio",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // 🔥 CARD: PRÓXIMAS CITAS
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: const [
+
+                        Text(
+                          "Próximas citas",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+
+                        SizedBox(height: 4),
+
+                        Text(
+                          "Próximos 7 días",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+
+                        SizedBox(height: 20),
+
+                        Center(
+                          child: Column(
+                            children: [
+
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.black,
+                                child: Text(
+                                  "!",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 10),
+
+                              Text(
+                                "Tu calendario está vacío",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // 🔥 CARD: ACTIVIDAD
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+
+                        const Text(
+                          "Actividad de citas",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        Center(
+                          child: Column(
+                            children: [
+
+                              const Icon(
+                                Icons.event_note,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              const Text(
+                                "Aún no tienes actividad",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+
+                              const SizedBox(height: 5),
+
+                              const Text(
+                                "Cuando recibas citas, aparecerán aquí",
+                                style: TextStyle(color: Colors.grey),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      // 🔻 BARRA INFERIOR
+      bottomNavigationBar: SafeArea(
+        // 👉 Evita que se tape con botones del sistema
+
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(20),
+
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+              )
+            ],
+          ),
+
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+            children: [
+
+              // 🏠 HOME
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _currentIndex = 0;
+                    // 👉 Activa el icono HOME
+                  });
+                },
+                child: Icon(
+                  Icons.home,
+                  color: _currentIndex == 0 ? Colors.purple : Colors.black,
+                ),
+              ),
+
+              // 📅 CALENDARIO
+              GestureDetector(
+                onTap: () {
+
+                  setState(() {
+                    _currentIndex = 1;
+                    // 👉 Activa calendario visualmente
+                  });
+
+                  // 👉 Navega al calendario
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CalendarioView(),
+                    ),
+                  ).then((value) {
+
+                    // 👉 🔥 CLAVE: recibe valor al volver
+
+                    if (value != null) {
+                      setState(() {
+                        _currentIndex = value;
+                        // 👉 Ej: 0 = HOME
+                      });
+                    } else {
+                      // 👉 Si no viene valor (botón atrás del celular)
+                      setState(() {
+                        _currentIndex = 0;
+                        // 👉 Por defecto vuelve a HOME
+                      });
+                    }
+                  });
+                },
+                child: Icon(
+                  Icons.calendar_today,
+                  color: _currentIndex == 1 ? Colors.purple : Colors.black,
+                ),
+              ),
+
+              // ✏️ EDITAR
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _currentIndex = 2;
+                  });
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ConfiguracionNegocioView(),
+                    ),
+                  );
+                },
+                child: Icon(
+                  Icons.edit,
+                  color: _currentIndex == 2 ? Colors.purple : Colors.black,
+                ),
+              ),
+
+              // 🔔 NOTIFICACIONES
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _currentIndex = 3;
+                  });
+                },
+                child: Icon(
+                  Icons.notifications_none,
+                  color: _currentIndex == 3 ? Colors.purple : Colors.black,
+                ),
+              ),
+
+              // 👤 PERFIL
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _currentIndex = 4;
+                  });
+                },
+                child: Icon(
+                  Icons.person,
+                  color: _currentIndex == 4 ? Colors.purple : Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
