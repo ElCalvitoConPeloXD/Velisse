@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:velisse/views/calendar_view.dart';
 import 'package:velisse/views/dates_view.dart';
 import 'package:velisse/views/notifications_view.dart';
-import 'package:velisse/views/profile_view.dart';
+import 'package:velisse/views/login_view.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _HomeViewState extends State<HomeView> {
     CalendarContent(), // Pantalla de calendario (puedes personalizarla)
     DatesContent(), // Pantalla de fecha (puedes personalizarla)
     NotificationsContent(), // Pantalla de notificaciones (puedes personalizarla)
-    ProfileContent(), // Pantalla de perfil (puedes personalizarla)
+    LogginView(), // Pantalla de perfil (puedes personalizarla)
   ];
 
   @override
