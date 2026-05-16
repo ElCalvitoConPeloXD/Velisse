@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // 👉 Importa la pantalla de configuración
-import 'configuracion_negocio_view.dart';
+import '../../../views/configuracion_negocio_view.dart';
 
 // 👉 Importa la pantalla de calendario
-import 'calendario_view.dart';
+import '../../../views/calendario_view.dart';
 
 
 // 👉 Widget principal del dashboard (pantalla inicial)

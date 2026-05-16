@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'home_view.dart'; 
+import '../../home/views/home_view.dart'; 
 import 'package:velisse/widgets/fondo.dart';
 
 class FirstView extends StatelessWidget {
+  const FirstView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppBackgroundfirst(

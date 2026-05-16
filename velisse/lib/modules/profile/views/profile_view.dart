@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
-class NotificationsContent extends StatelessWidget {
+class ProfileContent extends StatelessWidget {
+  const ProfileContent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notificaciones'),
+        title: Text('Perfil'),
       ),
       body: Center(
-        child: Text('Aquí va el contenido de las notificaciones'),
+        child: Text('Aquí va el contenido del perfil'),
       ),
     );
   }

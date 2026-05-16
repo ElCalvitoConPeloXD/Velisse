@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // 👉 Importa todo el sistema visual de Flutter (widgets, botones, layouts, etc)
 
-import 'dashboard_view.dart';
+import '../modules/dashboard/views/dashboard_bookings_view.dart';
 // 👉 Importa la pantalla Dashboard (a donde iremos después de guardar)
 
 
@@ -202,7 +202,7 @@ class _UbicacionViewState extends State<UbicacionView> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const DashboardView(),
+                            builder: (context) => DashboardBookingsView(),
                           ),
                         );
                         // 👉 Reemplaza la pantalla actual (flujo PRO)

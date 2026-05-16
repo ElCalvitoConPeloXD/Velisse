@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "282443662860",
+    "project_id": "velisse-f6ff3",
+    "storage_bucket": "velisse-f6ff3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282443662860:android:9db6561dc9684c85e89029",
+        "android_client_info": {
+          "package_name": "com.example.velisse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxI9uU01TMgi8ie31XbUfXaxn42HAPgsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
