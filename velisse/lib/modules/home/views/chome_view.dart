@@ -3,7 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:velisse/modules/calendar/views/calendar_view.dart';
 import 'package:velisse/modules/dates/views/dates_view.dart';
 import 'package:velisse/modules/notifications/views/notifications_view.dart';
-import 'package:velisse/modules/profile/views/profile_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

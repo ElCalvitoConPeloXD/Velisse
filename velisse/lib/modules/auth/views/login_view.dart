@@ -3,15 +3,20 @@
 /// ===============================================================
 library;
 
-/// Importa Material Design
+
+/// ===============================================================
+/// MATERIAL DESIGN
+/// ===============================================================
+
+/// Importa Flutter Material Design
 ///
-/// Gracias a esto podemos usar:
+/// Permite usar:
 /// - Scaffold
-/// - Text
-/// - Column
 /// - TextField
 /// - ElevatedButton
+/// - Column
 /// - Navigator
+/// - Text
 /// - etc
 import 'package:flutter/material.dart';
 
@@ -23,7 +28,7 @@ import 'package:flutter/material.dart';
 /// Pantalla principal Home
 ///
 /// Se usa cuando:
-/// - el usuario presiona atrás
+/// - el usuario presiona volver
 import 'package:velisse/modules/home/views/home_view.dart';
 
 
@@ -31,27 +36,38 @@ import 'package:velisse/modules/home/views/home_view.dart';
 /// IMPORTAR REGISTRO USUARIO
 /// ===============================================================
 
-/// Pantalla para registrar usuarios/clientes
-import 'package:velisse/modules/auth/views/createUser_view.dart';
-
-
-/// ===============================================================
-/// IMPORTAR WIDGET FONDO
-/// ===============================================================
-
-/// Widget reutilizable del fondo degradado
+/// Pantalla para registrar clientes
 ///
-/// Está en:
-/// lib/widgets/fondo.dart
-import '../../../widgets/fondo.dart';
+/// Ejemplos:
+/// - usuarios normales
+/// - clientes que reservan citas
+import 'package:velisse/modules/auth/views/createUser_view.dart';
 
 
 /// ===============================================================
 /// IMPORTAR LOGIN PROFESIONAL
 /// ===============================================================
 
-/// Pantalla login para profesionales
+/// Pantalla login profesionales
+///
+/// Ejemplos:
+/// - barberías
+/// - spas
+/// - salones
+/// - negocios
 import 'package:velisse/modules/auth/views/loginPro_view.dart';
+
+
+/// ===============================================================
+/// IMPORTAR FONDO PERSONALIZADO
+/// ===============================================================
+
+/// Widget reutilizable del fondo degradado
+///
+/// Ruta:
+/// lib/widgets/fondo.dart
+import '../../../widgets/fondo.dart';
+
 
 
 /// ===============================================================
@@ -60,488 +76,576 @@ import 'package:velisse/modules/auth/views/loginPro_view.dart';
 
 /// StatelessWidget:
 ///
-/// esta pantalla NO necesita setState()
+/// esta pantalla NO cambia estados
 ///
-/// solo renderiza UI
+/// solamente renderiza interfaz visual
 class LogginView extends StatelessWidget {
 
   /// Constructor
   const LogginView({super.key});
 
 
+
   /// =============================================================
   /// BUILD
   /// =============================================================
 
-  /// build():
-  /// construye toda la interfaz visual
   @override
   Widget build(BuildContext context) {
 
-    /// GradientBackground:
-    /// widget personalizado con fondo degradado
-    return GradientBackground(
+    /// ===========================================================
+    /// SCAFFOLD
+    /// ===========================================================
+
+    /// Scaffold:
+    /// crea estructura Material Design
+    ///
+    /// IMPORTANTE:
+    /// esto evita el error:
+    ///
+    /// "No Material widget found"
+    ///
+    /// porque TextField necesita un ancestro Material
+    return Scaffold(
+
+      /// Scaffold transparente
+      ///
+      /// deja visible el gradient background
+      backgroundColor: Colors.transparent,
+
+
 
       /// =========================================================
-      /// CHILD
+      /// BODY
       /// =========================================================
 
-      child: SafeArea(
+      body: GradientBackground(
 
-        /// SafeArea:
-        /// evita notch/status bar
-        child: SingleChildScrollView(
+
+
+        /// =======================================================
+        /// SAFE AREA
+        /// =======================================================
+
+        /// Evita notch
+        /// y barras del sistema
+        child: SafeArea(
+
+
 
           /// =====================================================
-          /// PADDING
+          /// SINGLE CHILD SCROLL VIEW
           /// =====================================================
 
-          /// Espaciado horizontal
+          /// Permite scroll vertical
           ///
-          /// viewInsets.bottom:
-          /// evita que teclado tape contenido
-          padding: EdgeInsets.only(
+          /// útil cuando aparece teclado
+          child: SingleChildScrollView(
 
-            left: 24,
-            right: 24,
 
-            bottom:
-                MediaQuery.of(context).viewInsets.bottom,
-          ),
 
-          /// =====================================================
-          /// CONSTRAINED BOX
-          /// =====================================================
+            /// ===================================================
+            /// PADDING
+            /// ===================================================
 
-          child: ConstrainedBox(
+            /// Padding dinámico
+            ///
+            /// viewInsets.bottom:
+            /// evita que teclado tape inputs
+            padding: EdgeInsets.only(
 
-            /// Altura mínima pantalla
-            constraints: BoxConstraints(
+              left: 24,
+              right: 24,
 
-              minHeight:
-                  MediaQuery.of(context).size.height,
+              bottom:
+                  MediaQuery.of(context)
+                      .viewInsets
+                      .bottom,
             ),
 
+
+
             /// ===================================================
-            /// INTRINSIC HEIGHT
+            /// CONSTRAINED BOX
             /// ===================================================
 
-            child: IntrinsicHeight(
+            /// Fuerza altura mínima
+            child: ConstrainedBox(
+
+              constraints: BoxConstraints(
+
+                minHeight:
+                    MediaQuery.of(context)
+                        .size
+                        .height,
+              ),
+
+
 
               /// =================================================
-              /// COLUMN
+              /// INTRINSIC HEIGHT
               /// =================================================
 
-              child: Column(
+              /// Ajusta altura automáticamente
+              child: IntrinsicHeight(
 
-                /// Centrado horizontal
-                crossAxisAlignment:
-                    CrossAxisAlignment.center,
 
-                children: [
 
-                  /// =============================================
-                  /// ESPACIO SUPERIOR
-                  /// =============================================
+                /// ===============================================
+                /// COLUMN PRINCIPAL
+                /// ===============================================
 
-                  const SizedBox(height: 10),
+                child: Column(
 
+                  /// Centrado horizontal
+                  crossAxisAlignment:
+                      CrossAxisAlignment.center,
 
-                  /// =============================================
-                  /// BOTÓN ATRÁS
-                  /// =============================================
+                  children: [
 
-                  Align(
 
-                    /// Alinear izquierda
-                    alignment: Alignment.centerLeft,
 
-                    child: IconButton(
+                    /// ===========================================
+                    /// ESPACIO SUPERIOR
+                    /// ===========================================
 
-                      /// Acción botón
-                      onPressed: () {
+                    const SizedBox(height: 10),
 
-                        /// Navegar Home
-                        Navigator.pushReplacement(
 
-                          context,
 
-                          MaterialPageRoute(
+                    /// ===========================================
+                    /// BOTÓN ATRÁS
+                    /// ===========================================
 
-                            builder: (context) =>
-                                HomeView(),
-                          ),
-                        );
-                      },
+                    Align(
 
-                      /// Icono
-                      icon: const Icon(
-                        Icons.arrow_back,
-                      ),
-                    ),
-                  ),
+                      /// Alinear izquierda
+                      alignment: Alignment.centerLeft,
 
+                      child: IconButton(
 
-                  /// =============================================
-                  /// ESPACIO
-                  /// =============================================
+                        /// Acción botón
+                        onPressed: () {
 
-                  const SizedBox(height: 40),
+                          /// Navegar Home
+                          Navigator.pushReplacement(
 
+                            context,
 
-                  /// =============================================
-                  /// TÍTULO
-                  /// =============================================
+                            MaterialPageRoute(
 
-                  const Text(
+                              builder: (context) =>
 
-                    '¡Bienvenido de\nnuevo!',
+                                  /// Home principal
+                                  const HomeView(),
+                            ),
+                          );
+                        },
 
-                    /// Centrar texto
-                    textAlign: TextAlign.center,
-
-                    style: TextStyle(
-
-                      /// Tamaño fuente
-                      fontSize: 38,
-
-                      /// Negrilla
-                      fontWeight: FontWeight.bold,
-
-                      /// Color
-                      color: Colors.black,
-                    ),
-                  ),
-
-
-                  /// =============================================
-                  /// ESPACIO
-                  /// =============================================
-
-                  const SizedBox(height: 20),
-
-
-                  /// =============================================
-                  /// SUBTÍTULO
-                  /// =============================================
-
-                  const Text(
-
-                    'Crea una cuenta o inicia sesión para reservar y\nadministrar tus citas',
-
-                    textAlign: TextAlign.center,
-
-                    style: TextStyle(
-
-                      fontSize: 15,
-
-                      color: Colors.black54,
-
-                      /// Espaciado vertical texto
-                      height: 1.5,
-                    ),
-                  ),
-
-
-                  /// =============================================
-                  /// ESPACIO
-                  /// =============================================
-
-                  const SizedBox(height: 30),
-
-
-                  /// =============================================
-                  /// INPUT EMAIL
-                  /// =============================================
-
-                  TextField(
-
-                    decoration: InputDecoration(
-
-                      /// Texto placeholder
-                      hintText:
-                          'correoelectrónico@dominio.com',
-
-                      /// Fondo activo
-                      filled: true,
-
-                      /// Color fondo
-                      fillColor: Colors.white,
-
-                      /// Padding interno
-                      contentPadding:
-                          const EdgeInsets.symmetric(
-
-                        horizontal: 16,
-                        vertical: 14,
-                      ),
-
-                      /// Borde principal
-                      border: OutlineInputBorder(
-
-                        borderRadius:
-                            BorderRadius.circular(10),
-
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-
-
-                  /// =============================================
-                  /// ESPACIO
-                  /// =============================================
-
-                  const SizedBox(height: 16),
-
-
-                  /// =============================================
-                  /// BOTÓN CONTINUAR
-                  /// =============================================
-
-                  SizedBox(
-
-                    width: double.infinity,
-
-                    height: 52,
-
-                    child: ElevatedButton(
-
-                      /// Acción botón
-                      onPressed: () {
-
-                        /// Navegar registro usuario
-                        Navigator.pushReplacement(
-
-                          context,
-
-                          MaterialPageRoute(
-
-                            builder: (context) =>
-
-                                /// IMPORTANTE:
-                                /// usa el nombre REAL
-                                /// de tu clase
-                                RegisterView(),
-                          ),
-                        );
-                      },
-
-                      /// Estilos botón
-                      style: ElevatedButton.styleFrom(
-
-                        backgroundColor: Colors.black,
-
-                        shape: RoundedRectangleBorder(
-
-                          borderRadius:
-                              BorderRadius.circular(10),
-                        ),
-                      ),
-
-                      /// Texto botón
-                      child: const Text(
-
-                        'Continuar',
-
-                        style: TextStyle(
-
-                          color: Colors.white,
-
-                          fontSize: 16,
+                        /// Icono flecha atrás
+                        icon: const Icon(
+                          Icons.arrow_back,
                         ),
                       ),
                     ),
-                  ),
 
 
-                  /// =============================================
-                  /// ESPACIO
-                  /// =============================================
 
-                  const SizedBox(height: 30),
+                    /// ===========================================
+                    /// ESPACIO
+                    /// ===========================================
 
-
-                  /// =============================================
-                  /// DIVIDER CON "O"
-                  /// =============================================
-
-                  Row(
-
-                    children: [
-
-                      /// Línea izquierda
-                      Expanded(
-
-                        child: Divider(
-                          color: Colors.grey,
-                        ),
-                      ),
-
-                      /// Texto centro
-                      const Padding(
-
-                        padding:
-                            EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ),
-
-                        child: Text('o'),
-                      ),
-
-                      /// Línea derecha
-                      Expanded(
-
-                        child: Divider(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
+                    const SizedBox(height: 40),
 
 
-                  /// =============================================
-                  /// ESPACIO
-                  /// =============================================
 
-                  const SizedBox(height: 25),
+                    /// ===========================================
+                    /// TÍTULO
+                    /// ===========================================
 
+                    const Text(
 
-                  /// =============================================
-                  /// TEXTO TÉRMINOS
-                  /// =============================================
+                      '¡Bienvenido de\nnuevo!',
 
-                  RichText(
-
-                    textAlign: TextAlign.center,
-
-                    text: const TextSpan(
+                      /// Centrar texto
+                      textAlign: TextAlign.center,
 
                       style: TextStyle(
 
+                        /// Tamaño fuente
+                        fontSize: 38,
+
+                        /// Negrilla
+                        fontWeight: FontWeight.bold,
+
+                        /// Color
+                        color: Colors.black,
+                      ),
+                    ),
+
+
+
+                    /// ===========================================
+                    /// ESPACIO
+                    /// ===========================================
+
+                    const SizedBox(height: 20),
+
+
+
+                    /// ===========================================
+                    /// SUBTÍTULO
+                    /// ===========================================
+
+                    const Text(
+
+                      'Crea una cuenta o inicia sesión '
+                      'para reservar y\n'
+                      'administrar tus citas',
+
+                      textAlign: TextAlign.center,
+
+                      style: TextStyle(
+
+                        fontSize: 15,
+
                         color: Colors.black54,
 
-                        fontSize: 12,
+                        /// Altura líneas
+                        height: 1.5,
                       ),
+                    ),
 
-                      children: [
 
-                        TextSpan(
 
-                          text:
-                              'Al hacer clic en continuar, aceptas nuestros ',
+                    /// ===========================================
+                    /// ESPACIO
+                    /// ===========================================
+
+                    const SizedBox(height: 30),
+
+
+
+                    /// ===========================================
+                    /// INPUT EMAIL
+                    /// ===========================================
+
+                    TextField(
+
+                      decoration: InputDecoration(
+
+                        /// Placeholder
+                        hintText:
+                            'correoelectrónico@dominio.com',
+
+                        /// Activar fondo
+                        filled: true,
+
+                        /// Fondo blanco
+                        fillColor: Colors.white,
+
+                        /// Padding interno
+                        contentPadding:
+                            const EdgeInsets.symmetric(
+
+                          horizontal: 16,
+                          vertical: 14,
                         ),
 
-                        TextSpan(
+                        /// Borde principal
+                        border: OutlineInputBorder(
 
-                          text:
-                              'Términos de\nservicio',
+                          borderRadius:
+                              BorderRadius.circular(10),
 
-                          style: TextStyle(
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
 
-                            fontWeight:
-                                FontWeight.bold,
 
-                            color: Colors.black87,
+
+                    /// ===========================================
+                    /// ESPACIO
+                    /// ===========================================
+
+                    const SizedBox(height: 16),
+
+
+
+                    /// ===========================================
+                    /// BOTÓN CONTINUAR
+                    /// ===========================================
+
+                    SizedBox(
+
+                      /// Ancho completo
+                      width: double.infinity,
+
+                      /// Alto botón
+                      height: 52,
+
+                      child: ElevatedButton(
+
+                        /// Acción botón
+                        onPressed: () {
+
+                          /// Navegar registro usuario
+                          Navigator.pushReplacement(
+
+                            context,
+
+                            MaterialPageRoute(
+
+                              builder: (context) =>
+
+                                  /// Registro clientes
+                                  const RegisterView(),
+                            ),
+                          );
+                        },
+
+
+
+                        /// Estilos botón
+                        style:
+                            ElevatedButton.styleFrom(
+
+                          /// Fondo negro
+                          backgroundColor:
+                              Colors.black,
+
+                          /// Bordes redondos
+                          shape:
+                              RoundedRectangleBorder(
+
+                            borderRadius:
+                                BorderRadius.circular(10),
                           ),
                         ),
 
-                        TextSpan(
-                          text: ' y ',
-                        ),
 
-                        TextSpan(
 
-                          text:
-                              'Política de privacidad',
+                        /// Texto botón
+                        child: const Text(
+
+                          'Continuar',
 
                           style: TextStyle(
 
-                            fontWeight:
-                                FontWeight.bold,
+                            color: Colors.white,
 
-                            color: Colors.black87,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+
+
+
+                    /// ===========================================
+                    /// ESPACIO
+                    /// ===========================================
+
+                    const SizedBox(height: 30),
+
+
+
+                    /// ===========================================
+                    /// DIVIDER CON "O"
+                    /// ===========================================
+
+                    Row(
+
+                      children: [
+
+                        /// Línea izquierda
+                        Expanded(
+
+                          child: Divider(
+                            color: Colors.grey,
+                          ),
+                        ),
+
+                        /// Texto central
+                        const Padding(
+
+                          padding:
+                              EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+
+                          child: Text('o'),
+                        ),
+
+                        /// Línea derecha
+                        Expanded(
+
+                          child: Divider(
+                            color: Colors.grey,
                           ),
                         ),
                       ],
                     ),
-                  ),
 
 
-                  /// =============================================
-                  /// ESPACIO
-                  /// =============================================
 
-                  const SizedBox(height: 50),
+                    /// ===========================================
+                    /// ESPACIO
+                    /// ===========================================
 
-
-                  /// =============================================
-                  /// TEXTO PROFESIONALES
-                  /// =============================================
-
-                  const Text(
-
-                    '¿Tienes una cuenta de empresa?',
-
-                    style: TextStyle(
-
-                      fontSize: 15,
-
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                    const SizedBox(height: 25),
 
 
-                  /// =============================================
-                  /// ESPACIO
-                  /// =============================================
 
-                  const SizedBox(height: 8),
+                    /// ===========================================
+                    /// TEXTO TÉRMINOS
+                    /// ===========================================
 
+                    RichText(
 
-                  /// =============================================
-                  /// LOGIN PROFESIONAL
-                  /// =============================================
+                      textAlign: TextAlign.center,
 
-                  GestureDetector(
+                      text: const TextSpan(
 
-                    onTap: () {
+                        style: TextStyle(
 
-                      /// Navegar login profesional
-                      Navigator.pushReplacement(
+                          color: Colors.black54,
 
-                        context,
-
-                        MaterialPageRoute(
-
-                          builder: (context) =>
-                              const LogginProView(),
+                          fontSize: 12,
                         ),
-                      );
-                    },
 
-                    child: const Text(
+                        children: [
 
-                      'Inicia sesión como profesional',
+                          TextSpan(
+
+                            text:
+                                'Al hacer clic en continuar, '
+                                'aceptas nuestros ',
+                          ),
+
+                          TextSpan(
+
+                            text:
+                                'Términos de\nservicio',
+
+                            style: TextStyle(
+
+                              fontWeight:
+                                  FontWeight.bold,
+
+                              color: Colors.black87,
+                            ),
+                          ),
+
+                          TextSpan(
+                            text: ' y ',
+                          ),
+
+                          TextSpan(
+
+                            text:
+                                'Política de privacidad',
+
+                            style: TextStyle(
+
+                              fontWeight:
+                                  FontWeight.bold,
+
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+
+
+                    /// ===========================================
+                    /// ESPACIO
+                    /// ===========================================
+
+                    const SizedBox(height: 50),
+
+
+
+                    /// ===========================================
+                    /// TEXTO PROFESIONALES
+                    /// ===========================================
+
+                    const Text(
+
+                      '¿Tienes una cuenta de empresa?',
 
                       style: TextStyle(
 
-                        color: Colors.purple,
-
                         fontSize: 15,
 
-                        fontWeight: FontWeight.bold,
+                        fontWeight:
+                            FontWeight.w500,
                       ),
                     ),
-                  ),
 
 
-                  /// =============================================
-                  /// ESPACIO FINAL
-                  /// =============================================
 
-                  const SizedBox(height: 30),
-                ],
+                    /// ===========================================
+                    /// ESPACIO
+                    /// ===========================================
+
+                    const SizedBox(height: 8),
+
+
+
+                    /// ===========================================
+                    /// LOGIN PROFESIONALES
+                    /// ===========================================
+
+                    GestureDetector(
+
+                      onTap: () {
+
+                        /// Navega login profesionales
+                        Navigator.pushReplacement(
+
+                          context,
+
+                          MaterialPageRoute(
+
+                            builder: (context) =>
+
+                                const LogginProView(),
+                          ),
+                        );
+                      },
+
+
+
+                      /// Texto clickable
+                      child: const Text(
+
+                        'Inicia sesión como profesional',
+
+                        style: TextStyle(
+
+                          color: Colors.purple,
+
+                          fontSize: 15,
+
+                          fontWeight:
+                              FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+
+
+                    /// ===========================================
+                    /// ESPACIO FINAL
+                    /// ===========================================
+
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           ),
