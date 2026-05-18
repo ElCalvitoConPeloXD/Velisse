@@ -1,204 +1,182 @@
-import 'package:flutter/material.dart'; 
-// 👉 Importa todo el sistema visual de Flutter (botones, textos, layouts, etc)
+/// ===============================================================
+/// IMPORTS
+/// ===============================================================
 
-import '../../schedules/views/horarios_view.dart'; 
-// 👉 Importa la pantalla a la que vamos a navegar cuando el usuario presione "Continuar"
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../schedules/views/horarios_view.dart';
 
-// 👉 Definimos el widget principal de esta pantalla
-// 👉 Es StatefulWidget porque necesitamos manejar estado (selecciones dinámicas)
+/// ===============================================================
+/// CONFIGURACIÓN NEGOCIO (PASO 2)
+/// ===============================================================
+/// 👉 Aquí se guardan categorías del negocio
+/// 👉 El negocio YA existe (viene de CreateBusinessView)
+
 class ConfiguracionNegocioView extends StatefulWidget {
 
-  const ConfiguracionNegocioView({super.key}); 
-  // 👉 Constructor del widget (permite usar key si es necesario)
+  /// ID del negocio creado en Firestore
+  final String businessId;
+
+  const ConfiguracionNegocioView({
+    super.key,
+    required this.businessId,
+  });
 
   @override
-  State<ConfiguracionNegocioView> createState() => _ConfiguracionNegocioViewState();
-  // 👉 Crea el estado asociado a este widget
+  State<ConfiguracionNegocioView> createState() =>
+      _ConfiguracionNegocioViewState();
 }
 
+/// ===============================================================
+/// STATE
+/// ===============================================================
 
-// 👉 Clase que maneja toda la lógica y el estado de la pantalla
 class _ConfiguracionNegocioViewState extends State<ConfiguracionNegocioView> {
 
-  List<String> selectedCategories = []; 
-  // 👉 Lista donde se guardan las categorías seleccionadas por el usuario
+  /// categorías seleccionadas
+  List<String> selectedCategories = [];
+
+  /// loading
+  bool isLoading = false;
+
+  /// =============================================================
+  /// GUARDAR CATEGORÍAS EN FIRESTORE
+  /// =============================================================
+  Future<void> saveCategoriesAndContinue() async {
+
+    if (selectedCategories.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Selecciona al menos una categoría")),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+
+      /// 🔥 actualizar business en Firestore
+      await FirebaseFirestore.instance
+          .collection('businesses')
+          .doc(widget.businessId)
+          .update({
+        'categories': selectedCategories,
+        'step': 'schedules',
+      });
+
+      /// ✅ siguiente paso (IMPORTANTE: pasar businessId)
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => HorariosView(
+            businessId: widget.businessId,
+          ),
+        ),
+      );
+
+    } catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
-  Widget build(BuildContext context) { 
-  // 👉 Método que construye la UI (se ejecuta cada vez que cambia el estado)
+  Widget build(BuildContext context) {
 
-    return Scaffold( 
-    // 👉 Estructura base de la pantalla
+    return Scaffold(
 
-      body: Stack( 
-      // 👉 Stack permite superponer elementos (fondo + contenido encima)
+      body: Stack(
 
         children: [
 
-          // 🖼️ CAPA 1: IMAGEN DE FONDO
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/Velisse_Fondo_General.png"), 
-                // 👉 Ruta de la imagen de fondo
-
-                fit: BoxFit.cover, 
-                // 👉 Hace que la imagen cubra toda la pantalla
+                image: AssetImage("assets/images/Velisse_Fondo_General.png"),
+                fit: BoxFit.cover,
               ),
             ),
           ),
 
-          // 🌑 CAPA 2: OVERLAY OSCURO
           Container(
-            color: Colors.black.withOpacity(0.2), 
-            // 👉 Capa semitransparente para mejorar la visibilidad del texto
+            color: Colors.black.withOpacity(0.2),
           ),
 
-          // 🔝 CAPA 3: CONTENIDO PRINCIPAL
-          SafeArea( 
-          // 👉 Evita que el contenido se meta en el notch o barra superior
+          SafeArea(
 
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20), 
-              // 👉 Espaciado a los lados
+
+              padding: const EdgeInsets.symmetric(horizontal: 20),
 
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, 
-                // 👉 Alinea todo a la izquierda
+
+                crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
 
-                  // 🔙 BOTÓN DE REGRESO
+                  const SizedBox(height: 10),
+
                   IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black), 
-                    // 
-
-                    onPressed: () {
-                      Navigator.pop(context); 
-                      // 👉 Regresa a la pantalla anterior
-                    },
-                  ),
-
-                  const SizedBox(height: 10), 
-                  // 👉 Espacio vertical
-
-                  // 📝 SUBTÍTULO
-                  const Text(
-                    "Configuración de cuenta",
-                    style: TextStyle(color: Colors.black45), 
-                    // 👉 Color claro para que se vea sobre fondo oscuro
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // 🧠 TÍTULO PRINCIPAL
-                  const Text(
-                    "Selecciona las categorías que mejor describen tu negocio",
-                    style: TextStyle(
-                      fontSize: 20, 
-                      // 👉 Tamaño del texto
-                      fontWeight: FontWeight.bold, 
-                      // 👉 Negrita
-                      color: Colors.black, 
-                      // 
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // 📄 DESCRIPCIÓN
-                  const Text(
-                    "Elige tu tipo de servicio principal y hasta 3 servicios relacionados",
-                    style: TextStyle(color: Colors.white60),
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () => Navigator.pop(context),
                   ),
 
                   const SizedBox(height: 20),
 
-                  // 🧱 GRID DE CATEGORÍAS
+                  const Text(
+                    "Selecciona las categorías",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  const Text(
+                    "Elige hasta 3 servicios",
+                    style: TextStyle(color: Colors.black54),
+                  ),
+
+                  const SizedBox(height: 20),
+
                   Expanded(
-                  // 👉 Hace que el grid ocupe el espacio disponible
-
                     child: GridView.count(
-                      crossAxisCount: 2, 
-                      // 👉 2 columnas
-
-                      mainAxisSpacing: 15, 
-                      // 👉 Espacio vertical
-
-                      crossAxisSpacing: 15, 
-                      // 👉 Espacio horizontal
-
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 15,
                       children: [
-
-                        // 👉 Cada elemento es una categoría
                         _buildCategory("Peluquería", Icons.cut),
-                        _buildCategory("Salón de uñas", Icons.brush),
                         _buildCategory("Barbería", Icons.content_cut),
-                        _buildCategory("Centro facial", Icons.face),
-                        _buildCategory("Cejas y pestañas", Icons.visibility),
+                        _buildCategory("Uñas", Icons.brush),
+                        _buildCategory("Facial", Icons.face),
+                        _buildCategory("Cejas", Icons.visibility),
                         _buildCategory("Depilación", Icons.spa),
                       ],
                     ),
                   ),
 
-                  // 🔘 BOTÓN CONTINUAR
-                  Container(
-                    width: double.infinity, 
-                    // 👉 Ocupa todo el ancho
-
-                    margin: const EdgeInsets.only(bottom: 20), 
-                    // 👉 Espacio inferior
-
+                  SizedBox(
+                    width: double.infinity,
                     child: ElevatedButton(
-
+                      onPressed: isLoading ? null : saveCategoriesAndContinue,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black, 
-                        // 👉 Fondo negro
-
-                        foregroundColor: Colors.white, 
-                        // 👉 Texto blanco
-
-                        padding: const EdgeInsets.symmetric(vertical: 18), 
-                        // 👉 Botón alto (mejor UX)
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12), 
-                          // 👉 Bordes redondeados
-                        ),
+                        backgroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-
-                      onPressed: () {
-
-                        // ❌ VALIDACIÓN
-                        if (selectedCategories.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Selecciona al menos una categoría"),
-                            ),
-                          );
-                          return; 
-                          // 👉 Detiene la ejecución (no navega)
-                        }
-
-                        // ✅ NAVEGACIÓN
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HorariosView(),
-                          ),
-                        );
-                      },
-
-                      child: const Text(
-                        "Continuar",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text("Continuar"),
                     ),
-                  )
+                  ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -208,27 +186,20 @@ class _ConfiguracionNegocioViewState extends State<ConfiguracionNegocioView> {
     );
   }
 
-
-  // 🔥 FUNCIÓN PARA CREAR CADA TARJETA DE CATEGORÍA
   Widget _buildCategory(String title, IconData icon) {
 
-    final isSelected = selectedCategories.contains(title); 
-    // 👉 Verifica si esta categoría ya está seleccionada
+    final isSelected = selectedCategories.contains(title);
 
     return GestureDetector(
-    // 👉 Detecta el toque del usuario
 
       onTap: () {
-        setState(() { 
-        // 👉 Actualiza la UI
+        setState(() {
 
           if (isSelected) {
-            selectedCategories.remove(title); 
-            // 👉 Si ya estaba seleccionada → la quitamos
+            selectedCategories.remove(title);
           } else {
             if (selectedCategories.length < 3) {
-              selectedCategories.add(title); 
-              // 👉 Solo permite máximo 3 selecciones
+              selectedCategories.add(title);
             }
           }
         });
@@ -236,41 +207,19 @@ class _ConfiguracionNegocioViewState extends State<ConfiguracionNegocioView> {
 
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected ? Colors.black : Colors.white, 
-          // 👉 Cambia color si está seleccionada
-
-          borderRadius: BorderRadius.circular(15), 
-          // 👉 Bordes redondeados
-
-          border: Border.all(
-            color: isSelected ? Colors.black : Colors.grey.shade300, 
-            // 👉 Borde dinámico
-          ),
+          color: isSelected ? Colors.black : Colors.white,
+          borderRadius: BorderRadius.circular(15),
         ),
-
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, 
-          // 👉 Centra contenido verticalmente
-
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
-            // 👉 ICONO
-            Icon(
-              icon,
-              size: 30,
-              color: isSelected ? Colors.white : Colors.black,
-            ),
-
+            Icon(icon,
+                color: isSelected ? Colors.white : Colors.black),
             const SizedBox(height: 8),
-
-            // 👉 TEXTO
             Text(
               title,
-              textAlign: TextAlign.center,
-
               style: TextStyle(
                 color: isSelected ? Colors.white : Colors.black,
-                fontWeight: FontWeight.w500,
               ),
             ),
           ],

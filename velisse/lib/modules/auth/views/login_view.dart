@@ -1,647 +1,300 @@
 /// ===============================================================
-/// IMPORTACIONES
+/// LOGIN VIEW
 /// ===============================================================
+
 library;
 
-
 /// ===============================================================
-/// MATERIAL DESIGN
+/// IMPORTACIONES
 /// ===============================================================
 
-/// Importa Flutter Material Design
-///
-/// Permite usar:
-/// - Scaffold
-/// - TextField
-/// - ElevatedButton
-/// - Column
-/// - Navigator
-/// - Text
-/// - etc
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-
-/// ===============================================================
-/// IMPORTAR HOME
-/// ===============================================================
-
-/// Pantalla principal Home
-///
-/// Se usa cuando:
-/// - el usuario presiona volver
+/// DASHBOARD
 import 'package:velisse/modules/home/views/home_view.dart';
 
-
-/// ===============================================================
-/// IMPORTAR REGISTRO USUARIO
-/// ===============================================================
-
-/// Pantalla para registrar clientes
-///
-/// Ejemplos:
-/// - usuarios normales
-/// - clientes que reservan citas
+/// REGISTRO (TU CLASE REAL ES RegisterView)
 import 'package:velisse/modules/auth/views/createUser_view.dart';
 
-
-/// ===============================================================
-/// IMPORTAR LOGIN PROFESIONAL
-/// ===============================================================
-
-/// Pantalla login profesionales
-///
-/// Ejemplos:
-/// - barberías
-/// - spas
-/// - salones
-/// - negocios
+/// PROFESIONALES
 import 'package:velisse/modules/auth/views/loginPro_view.dart';
 
-
-/// ===============================================================
-/// IMPORTAR FONDO PERSONALIZADO
-/// ===============================================================
-
-/// Widget reutilizable del fondo degradado
-///
-/// Ruta:
-/// lib/widgets/fondo.dart
+/// FONDO
 import '../../../widgets/fondo.dart';
-
-
 
 /// ===============================================================
 /// LOGIN VIEW
 /// ===============================================================
 
-/// StatelessWidget:
-///
-/// esta pantalla NO cambia estados
-///
-/// solamente renderiza interfaz visual
-class LogginView extends StatelessWidget {
-
-  /// Constructor
+class LogginView extends StatefulWidget {
   const LogginView({super.key});
 
+  @override
+  State<LogginView> createState() => _LogginViewState();
+}
 
+/// ===============================================================
+/// STATE
+/// ===============================================================
 
-  /// =============================================================
+class _LogginViewState extends State<LogginView> {
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  /// ===============================================================
   /// BUILD
-  /// =============================================================
+  /// ===============================================================
 
   @override
   Widget build(BuildContext context) {
-
-    /// ===========================================================
-    /// SCAFFOLD
-    /// ===========================================================
-
-    /// Scaffold:
-    /// crea estructura Material Design
-    ///
-    /// IMPORTANTE:
-    /// esto evita el error:
-    ///
-    /// "No Material widget found"
-    ///
-    /// porque TextField necesita un ancestro Material
     return Scaffold(
-
-      /// Scaffold transparente
-      ///
-      /// deja visible el gradient background
       backgroundColor: Colors.transparent,
 
-
-
-      /// =========================================================
-      /// BODY
-      /// =========================================================
-
       body: GradientBackground(
-
-
-
-        /// =======================================================
-        /// SAFE AREA
-        /// =======================================================
-
-        /// Evita notch
-        /// y barras del sistema
         child: SafeArea(
-
-
-
-          /// =====================================================
-          /// SINGLE CHILD SCROLL VIEW
-          /// =====================================================
-
-          /// Permite scroll vertical
-          ///
-          /// útil cuando aparece teclado
           child: SingleChildScrollView(
-
-
-
-            /// ===================================================
-            /// PADDING
-            /// ===================================================
-
-            /// Padding dinámico
-            ///
-            /// viewInsets.bottom:
-            /// evita que teclado tape inputs
             padding: EdgeInsets.only(
-
               left: 24,
               right: 24,
-
-              bottom:
-                  MediaQuery.of(context)
-                      .viewInsets
-                      .bottom,
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
 
-
-
-            /// ===================================================
-            /// CONSTRAINED BOX
-            /// ===================================================
-
-            /// Fuerza altura mínima
             child: ConstrainedBox(
-
               constraints: BoxConstraints(
-
-                minHeight:
-                    MediaQuery.of(context)
-                        .size
-                        .height,
+                minHeight: MediaQuery.of(context).size.height,
               ),
 
-
-
-              /// =================================================
-              /// INTRINSIC HEIGHT
-              /// =================================================
-
-              /// Ajusta altura automáticamente
               child: IntrinsicHeight(
-
-
-
-                /// ===============================================
-                /// COLUMN PRINCIPAL
-                /// ===============================================
-
                 child: Column(
-
-                  /// Centrado horizontal
-                  crossAxisAlignment:
-                      CrossAxisAlignment.center,
-
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-
-
-
-                    /// ===========================================
-                    /// ESPACIO SUPERIOR
-                    /// ===========================================
 
                     const SizedBox(height: 10),
 
-
-
-                    /// ===========================================
-                    /// BOTÓN ATRÁS
-                    /// ===========================================
-
+                    /// ===================================================
+                    /// BACK
+                    /// ===================================================
                     Align(
-
-                      /// Alinear izquierda
                       alignment: Alignment.centerLeft,
-
                       child: IconButton(
-
-                        /// Acción botón
-                        onPressed: () {
-
-                          /// Navegar Home
-                          Navigator.pushReplacement(
-
-                            context,
-
-                            MaterialPageRoute(
-
-                              builder: (context) =>
-
-                                  /// Home principal
-                                  const HomeView(),
-                            ),
-                          );
-                        },
-
-                        /// Icono flecha atrás
-                        icon: const Icon(
-                          Icons.arrow_back,
-                        ),
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.arrow_back),
                       ),
                     ),
 
-
-
-                    /// ===========================================
-                    /// ESPACIO
-                    /// ===========================================
-
                     const SizedBox(height: 40),
 
-
-
-                    /// ===========================================
-                    /// TÍTULO
-                    /// ===========================================
-
+                    /// ===================================================
+                    /// TITULO
+                    /// ===================================================
                     const Text(
-
                       '¡Bienvenido de\nnuevo!',
-
-                      /// Centrar texto
                       textAlign: TextAlign.center,
-
                       style: TextStyle(
-
-                        /// Tamaño fuente
                         fontSize: 38,
-
-                        /// Negrilla
                         fontWeight: FontWeight.bold,
-
-                        /// Color
                         color: Colors.black,
                       ),
                     ),
 
-
-
-                    /// ===========================================
-                    /// ESPACIO
-                    /// ===========================================
-
                     const SizedBox(height: 20),
 
-
-
-                    /// ===========================================
-                    /// SUBTÍTULO
-                    /// ===========================================
-
                     const Text(
-
-                      'Crea una cuenta o inicia sesión '
-                      'para reservar y\n'
-                      'administrar tus citas',
-
+                      'Inicia sesión para reservar y\nadministrar tus citas',
                       textAlign: TextAlign.center,
-
                       style: TextStyle(
-
                         fontSize: 15,
-
                         color: Colors.black54,
-
-                        /// Altura líneas
                         height: 1.5,
                       ),
                     ),
 
-
-
-                    /// ===========================================
-                    /// ESPACIO
-                    /// ===========================================
-
                     const SizedBox(height: 30),
 
-
-
-                    /// ===========================================
-                    /// INPUT EMAIL
-                    /// ===========================================
-
+                    /// ===================================================
+                    /// EMAIL
+                    /// ===================================================
                     TextField(
-
+                      controller: emailController,
                       decoration: InputDecoration(
-
-                        /// Placeholder
-                        hintText:
-                            'correoelectrónico@dominio.com',
-
-                        /// Activar fondo
+                        hintText: 'correo@dominio.com',
                         filled: true,
-
-                        /// Fondo blanco
                         fillColor: Colors.white,
-
-                        /// Padding interno
-                        contentPadding:
-                            const EdgeInsets.symmetric(
-
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-
-                        /// Borde principal
                         border: OutlineInputBorder(
-
-                          borderRadius:
-                              BorderRadius.circular(10),
-
+                          borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
                       ),
                     ),
 
-
-
-                    /// ===========================================
-                    /// ESPACIO
-                    /// ===========================================
-
                     const SizedBox(height: 16),
 
+                    /// ===================================================
+                    /// PASSWORD
+                    /// ===================================================
+                    TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Contraseña',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
 
+                    const SizedBox(height: 20),
 
-                    /// ===========================================
-                    /// BOTÓN CONTINUAR
-                    /// ===========================================
-
+                    /// ===================================================
+                    /// BOTÓN CONTINUAR (LOGIN)
+                    /// ===================================================
                     SizedBox(
-
-                      /// Ancho completo
                       width: double.infinity,
-
-                      /// Alto botón
                       height: 52,
 
                       child: ElevatedButton(
+                        onPressed: () async {
+                          try {
 
-                        /// Acción botón
-                        onPressed: () {
+                            await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                            );
 
-                          /// Navegar registro usuario
-                          Navigator.pushReplacement(
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const HomeView(),
+                              ),
+                            );
 
-                            context,
+                          } on FirebaseAuthException catch (e) {
 
-                            MaterialPageRoute(
+                            String msg = 'Error al iniciar sesión';
 
-                              builder: (context) =>
+                            if (e.code == 'user-not-found') {
+                              msg = 'Usuario no encontrado';
+                            }
 
-                                  /// Registro clientes
-                                  const RegisterView(),
-                            ),
-                          );
+                            if (e.code == 'wrong-password') {
+                              msg = 'Contraseña incorrecta';
+                            }
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(msg)),
+                            );
+                          }
                         },
 
-
-
-                        /// Estilos botón
-                        style:
-                            ElevatedButton.styleFrom(
-
-                          /// Fondo negro
-                          backgroundColor:
-                              Colors.black,
-
-                          /// Bordes redondos
-                          shape:
-                              RoundedRectangleBorder(
-
-                            borderRadius:
-                                BorderRadius.circular(10),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
 
-
-
-                        /// Texto botón
                         child: const Text(
-
                           'Continuar',
-
                           style: TextStyle(
-
                             color: Colors.white,
-
                             fontSize: 16,
                           ),
                         ),
                       ),
                     ),
 
-
-
-                    /// ===========================================
-                    /// ESPACIO
-                    /// ===========================================
-
-                    const SizedBox(height: 30),
-
-
-
-                    /// ===========================================
-                    /// DIVIDER CON "O"
-                    /// ===========================================
-
-                    Row(
-
-                      children: [
-
-                        /// Línea izquierda
-                        Expanded(
-
-                          child: Divider(
-                            color: Colors.grey,
-                          ),
-                        ),
-
-                        /// Texto central
-                        const Padding(
-
-                          padding:
-                              EdgeInsets.symmetric(
-                            horizontal: 10,
-                          ),
-
-                          child: Text('o'),
-                        ),
-
-                        /// Línea derecha
-                        Expanded(
-
-                          child: Divider(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-
-
-
-                    /// ===========================================
-                    /// ESPACIO
-                    /// ===========================================
-
-                    const SizedBox(height: 25),
-
-
-
-                    /// ===========================================
-                    /// TEXTO TÉRMINOS
-                    /// ===========================================
-
-                    RichText(
-
-                      textAlign: TextAlign.center,
-
-                      text: const TextSpan(
-
-                        style: TextStyle(
-
-                          color: Colors.black54,
-
-                          fontSize: 12,
-                        ),
-
-                        children: [
-
-                          TextSpan(
-
-                            text:
-                                'Al hacer clic en continuar, '
-                                'aceptas nuestros ',
-                          ),
-
-                          TextSpan(
-
-                            text:
-                                'Términos de\nservicio',
-
-                            style: TextStyle(
-
-                              fontWeight:
-                                  FontWeight.bold,
-
-                              color: Colors.black87,
-                            ),
-                          ),
-
-                          TextSpan(
-                            text: ' y ',
-                          ),
-
-                          TextSpan(
-
-                            text:
-                                'Política de privacidad',
-
-                            style: TextStyle(
-
-                              fontWeight:
-                                  FontWeight.bold,
-
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-
-
-                    /// ===========================================
-                    /// ESPACIO
-                    /// ===========================================
-
-                    const SizedBox(height: 50),
-
-
-
-                    /// ===========================================
-                    /// TEXTO PROFESIONALES
-                    /// ===========================================
-
-                    const Text(
-
-                      '¿Tienes una cuenta de empresa?',
-
-                      style: TextStyle(
-
-                        fontSize: 15,
-
-                        fontWeight:
-                            FontWeight.w500,
-                      ),
-                    ),
-
-
-
-                    /// ===========================================
-                    /// ESPACIO
-                    /// ===========================================
-
-                    const SizedBox(height: 8),
-
-
-
-                    /// ===========================================
-                    /// LOGIN PROFESIONALES
-                    /// ===========================================
-
-                    GestureDetector(
-
-                      onTap: () {
-
-                        /// Navega login profesionales
-                        Navigator.pushReplacement(
-
+                    const SizedBox(height: 12),
+
+                    /// ===================================================
+                    /// BOTÓN REGISTRARSE
+                    /// ===================================================
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
                           context,
-
                           MaterialPageRoute(
-
-                            builder: (context) =>
-
-                                const LogginProView(),
+                            builder: (_) => const RegisterView(),
                           ),
                         );
                       },
-
-
-
-                      /// Texto clickable
                       child: const Text(
-
-                        'Inicia sesión como profesional',
-
+                        'Registrarse',
                         style: TextStyle(
-
                           color: Colors.purple,
-
-                          fontSize: 15,
-
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
 
+                    const SizedBox(height: 30),
 
+                    /// ===================================================
+                    /// DIVIDER
+                    /// ===================================================
+                    Row(
+                      children: const [
+                        Expanded(child: Divider(color: Colors.grey)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text('o'),
+                        ),
+                        Expanded(child: Divider(color: Colors.grey)),
+                      ],
+                    ),
 
-                    /// ===========================================
-                    /// ESPACIO FINAL
-                    /// ===========================================
+                    const SizedBox(height: 25),
+
+                    /// ===================================================
+                    /// TÉRMINOS
+                    /// ===================================================
+                    const Text(
+                      'Al hacer clic en continuar, aceptas nuestros Términos de servicio y Política de privacidad',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                      ),
+                    ),
+
+                    const SizedBox(height: 50),
+
+                    /// ===================================================
+                    /// PROFESIONALES
+                    /// ===================================================
+                    const Text(
+                      '¿Tienes una cuenta de empresa?',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const LogginProView(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Inicia sesión como profesional',
+                        style: TextStyle(
+                          color: Colors.purple,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
 
                     const SizedBox(height: 30),
                   ],

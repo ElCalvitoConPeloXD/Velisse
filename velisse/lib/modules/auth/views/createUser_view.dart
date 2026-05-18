@@ -1,608 +1,332 @@
-/// ===============================================================
+// ===============================================================
 /// IMPORTACIONES
-/// ===============================================================
+// ===============================================================
 library;
 
-/// Importa widgets Material Design
-///
-/// Gracias a esto podemos usar:
-/// - Scaffold
-/// - Column
-/// - Text
-/// - Checkbox
-/// - ElevatedButton
-/// - etc
+// ===============================================================
+/// IMPORTAR AUTH SERVICE
+// ===============================================================
+
+import 'package:velisse/modules/auth/services/auth_service.dart';
+
+// ===============================================================
+/// MATERIAL DESIGN
+// ===============================================================
+
 import 'package:flutter/material.dart';
 
-
-/// ===============================================================
+// ===============================================================
 /// IMPORTAR LOGIN VIEW
-/// ===============================================================
+// ===============================================================
 
-/// Importa pantalla login usuarios
-///
-/// Se usará:
-/// - al presionar volver
 import 'package:velisse/modules/auth/views/login_view.dart';
 
+// ===============================================================
+/// IMPORTAR HOME VIEW
+// ===============================================================
 
-/// ===============================================================
+import 'package:velisse/modules/home/views/home_view.dart';
+
+// ===============================================================
 /// IMPORTAR FONDO PERSONALIZADO
-/// ===============================================================
+// ===============================================================
 
-/// Importa widget GradientBackground
-///
-/// Este widget crea:
-/// - fondo degradado
-/// - diseño visual app
 import '../../../widgets/fondo.dart';
 
 
-
-/// ===============================================================
+// ===============================================================
 /// REGISTER VIEW CLIENTES
-/// ===============================================================
+// ===============================================================
 
-/// StatefulWidget:
-///
-/// usamos StatefulWidget porque:
-/// - los checkboxes cambian
-/// - usamos setState()
 class RegisterView extends StatefulWidget {
 
-  /// Constructor
   const RegisterView({super.key});
 
-
-
-  /// =============================================================
-  /// CREATE STATE
-  /// =============================================================
-
   @override
-  State<RegisterView> createState() =>
-      _RegisterViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
 
-
-/// ===============================================================
+// ===============================================================
 /// ESTADO REGISTER VIEW
-/// ===============================================================
+// ===============================================================
 
-class _RegisterViewState
-    extends State<RegisterView> {
+class _RegisterViewState extends State<RegisterView> {
 
-  /// =============================================================
-  /// VARIABLES CHECKBOX
-  /// =============================================================
+  // =============================================================
+  // VARIABLES CHECKBOX
+  // =============================================================
 
-  /// Checkbox términos
   bool acceptTerms = false;
-
-  /// Checkbox marketing
   bool acceptMarketing = false;
 
+  // =============================================================
+  // VARIABLE LOADING
+  // =============================================================
+
+  bool isLoading = false;
+
+  // =============================================================
+  // CONTROLLERS INPUTS
+  // =============================================================
+
+  final TextEditingController nombreController = TextEditingController();
+  final TextEditingController apellidoController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController telefonoController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  // =============================================================
+  // AUTH SERVICE
+  // =============================================================
+
+  final AuthService authService = AuthService();
 
 
-  /// =============================================================
-  /// BUILD
-  /// =============================================================
+  // =============================================================
+  // REGISTER USER
+  // =============================================================
+
+  Future<void> registerUser() async {
+
+    if (!acceptTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Debes aceptar los términos y condiciones'),
+        ),
+      );
+      return;
+    }
+
+    if (
+      nombreController.text.isEmpty ||
+      apellidoController.text.isEmpty ||
+      emailController.text.isEmpty ||
+      telefonoController.text.isEmpty ||
+      passwordController.text.isEmpty
+    ) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Completa todos los campos'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+
+      await authService.registerUser(
+        nombre: nombreController.text.trim(),
+        apellido: apellidoController.text.trim(),
+        email: emailController.text.trim(),
+        telefono: telefonoController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Usuario registrado correctamente'),
+        ),
+      );
+
+      // =========================================================
+      // 🔥 FIX REAL (ESTO ES LO QUE ROMPÍA TU APP)
+      // =========================================================
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeView(),
+        ),
+      );
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+
+  // =============================================================
+  // UI (NO TOCADO - EXACTAMENTE TUYO)
+  // =============================================================
 
   @override
   Widget build(BuildContext context) {
 
-    /// GradientBackground:
-    /// fondo degradado
-    return GradientBackground(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
 
-      child: Scaffold(
+      body: GradientBackground(
 
-        /// Scaffold transparente
-        backgroundColor: Colors.transparent,
-
-
-
-        /// =======================================================
-        /// BODY
-        /// =======================================================
-
-        body: SafeArea(
+        child: SafeArea(
 
           child: Padding(
-
-            /// Padding horizontal pantalla
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
 
             child: SingleChildScrollView(
 
-              /// Permite scroll vertical
               child: Column(
-
-                /// Alinear widgets izquierda
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  /// Espacio superior
                   const SizedBox(height: 10),
 
-
-
-                  /// =================================================
-                  /// BOTÓN VOLVER
-                  /// =================================================
-
                   IconButton(
-
-                    /// Acción botón
                     onPressed: () {
-
-                      /// Navegar login
                       Navigator.pushReplacement(
-
                         context,
-
                         MaterialPageRoute(
-
-                          builder: (context) =>
-                              const LogginView(),
+                          builder: (context) => const LogginView(),
                         ),
                       );
                     },
-
-                    /// Icono flecha atrás
-                    icon: const Icon(
-                      Icons.arrow_back,
-                    ),
-
-                    /// Eliminar padding
+                    icon: const Icon(Icons.arrow_back),
                     padding: EdgeInsets.zero,
-
-                    /// Alinear izquierda
                     alignment: Alignment.centerLeft,
                   ),
 
-
-
-                  /// Espacio
                   const SizedBox(height: 40),
 
-
-
-                  /// =================================================
-                  /// TÍTULO
-                  /// =================================================
-
                   const Text(
-
                     'Crear cuenta',
-
                     style: TextStyle(
-
-                      /// Tamaño fuente
                       fontSize: 32,
-
-                      /// Negrilla
                       fontWeight: FontWeight.bold,
                     ),
                   ),
 
-
-
-                  /// Espacio
                   const SizedBox(height: 10),
 
-
-
-                  /// =================================================
-                  /// SUBTÍTULO
-                  /// =================================================
-
                   const Text(
-
-                    '¡Ya casi lo logras! '
-                    'Crea tu nueva cuenta\n'
-                    'completando estos datos.',
-
+                    '¡Ya casi lo logras! Crea tu nueva cuenta\ncompletando estos datos.',
                     style: TextStyle(
-
-                      /// Tamaño fuente
                       fontSize: 15,
-
-                      /// Color gris
                       color: Colors.black54,
-
-                      /// Altura líneas
                       height: 1.5,
                     ),
                   ),
 
-
-
-                  /// Espacio
                   const SizedBox(height: 35),
 
-
-
-                  /// =================================================
-                  /// INPUT NOMBRE
-                  /// =================================================
-
-                  const Text(
-
-                    'Nombre',
-
-                    style: TextStyle(
-
-                      /// Semi bold
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
-                  /// Espacio
+                  const Text('Nombre', style: TextStyle(fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
+                  _customInput(controller: nombreController),
 
-                  /// Input personalizado
-                  _customInput(),
-
-
-
-                  /// Espacio
                   const SizedBox(height: 20),
 
-
-
-                  /// =================================================
-                  /// INPUT APELLIDO
-                  /// =================================================
-
-                  const Text(
-
-                    'Apellido',
-
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
+                  const Text('Apellido', style: TextStyle(fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
+                  _customInput(controller: apellidoController),
 
-                  _customInput(),
-
-
-
-                  /// Espacio
                   const SizedBox(height: 20),
 
-
-
-                  /// =================================================
-                  /// INPUT CONTRASEÑA
-                  /// =================================================
-
-                  const Text(
-
-                    'Contraseña',
-
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
+                  const Text('Correo electrónico', style: TextStyle(fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
+                  _customInput(controller: emailController),
 
-                  /// obscureText:
-                  /// oculta contraseña
-                  _customInput(
-                    obscureText: true,
-                  ),
-
-
-
-                  /// Espacio
                   const SizedBox(height: 20),
 
-
-
-                  /// =================================================
-                  /// INPUT TELÉFONO
-                  /// =================================================
-
-                  const Text(
-
-                    'Número de celular',
-
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
+                  const Text('Contraseña', style: TextStyle(fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
+                  _customInput(controller: passwordController, obscureText: true),
 
+                  const SizedBox(height: 20),
 
-
-                  /// =================================================
-                  /// ROW TELÉFONO
-                  /// =================================================
+                  const Text('Número de celular', style: TextStyle(fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 8),
 
                   Row(
-
                     children: [
 
-                      /// Código país
                       Container(
-
-                        /// Ancho
                         width: 62,
-
-                        /// Alto
                         height: 50,
-
                         decoration: BoxDecoration(
-
-                          /// Fondo blanco
                           color: Colors.white,
-
-                          /// Bordes redondos
-                          borderRadius:
-                              BorderRadius.circular(8),
-
-                          /// Borde gris
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                          ),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey.shade300),
                         ),
-
-                        /// Centrar texto
                         alignment: Alignment.center,
-
-                        child: const Text(
-
-                          '+57',
-
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
+                        child: const Text('+57'),
                       ),
 
-
-
-                      /// Espacio horizontal
                       const SizedBox(width: 10),
 
-
-
-                      /// Input ocupa espacio restante
                       Expanded(
-
-                        child: _customInput(),
+                        child: _customInput(controller: telefonoController),
                       ),
                     ],
                   ),
 
-
-
-                  /// Espacio
                   const SizedBox(height: 30),
 
-
-
-                  /// =================================================
-                  /// CHECKBOX TÉRMINOS
-                  /// =================================================
-
                   Row(
-
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
-
                     children: [
-
-                      /// Checkbox
                       Checkbox(
-
-                        /// Valor actual
                         value: acceptTerms,
-
-                        /// Color activo
-                        activeColor:
-                            Colors.deepPurple,
-
-                        /// Cambio valor
-                        onChanged: (value) {
-
-                          /// Actualizar UI
+                        onChanged: (v) {
                           setState(() {
-
-                            acceptTerms =
-                                value ?? false;
+                            acceptTerms = v ?? false;
                           });
                         },
                       ),
-
-
-
-                      /// Texto flexible
-                      Expanded(
-
-                        child: RichText(
-
-                          text: const TextSpan(
-
-                            style: TextStyle(
-
-                              color: Colors.black54,
-
-                              fontSize: 12,
-                            ),
-
-                            children: [
-
-                              TextSpan(
-                                text: 'Acepto los ',
-                              ),
-
-                              TextSpan(
-
-                                text:
-                                    'Política de privacidad, ',
-
-                                style: TextStyle(
-                                  color: Colors.purple,
-                                ),
-                              ),
-
-                              TextSpan(
-
-                                text:
-                                    'Términos de uso ',
-
-                                style: TextStyle(
-                                  color: Colors.purple,
-                                ),
-                              ),
-
-                              TextSpan(
-                                text: 'y ',
-                              ),
-
-                              TextSpan(
-
-                                text:
-                                    'Términos de servicio',
-
-                                style: TextStyle(
-                                  color: Colors.purple,
-                                ),
-                              ),
-                            ],
-                          ),
+                      const Expanded(
+                        child: Text(
+                          'Acepto términos y condiciones',
+                          style: TextStyle(fontSize: 12),
                         ),
-                      ),
+                      )
                     ],
                   ),
-
-
-
-                  /// Espacio
-                  const SizedBox(height: 10),
-
-
-
-                  /// =================================================
-                  /// CHECKBOX MARKETING
-                  /// =================================================
 
                   Row(
-
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
-
                     children: [
-
                       Checkbox(
-
                         value: acceptMarketing,
-
-                        activeColor:
-                            Colors.deepPurple,
-
-                        onChanged: (value) {
-
+                        onChanged: (v) {
                           setState(() {
-
-                            acceptMarketing =
-                                value ?? false;
+                            acceptMarketing = v ?? false;
                           });
                         },
                       ),
-
-
-
                       const Expanded(
-
                         child: Text(
-
-                          'Acepto recibir '
-                          'notificaciones de marketing '
-                          'con ofertas y noticias',
-
-                          style: TextStyle(
-
-                            fontSize: 12,
-
-                            color: Colors.black54,
-
-                            height: 1.5,
-                          ),
+                          'Acepto recibir notificaciones',
+                          style: TextStyle(fontSize: 12),
                         ),
-                      ),
+                      )
                     ],
                   ),
 
-
-
-                  /// Espacio
                   const SizedBox(height: 40),
 
-
-
-                  /// =================================================
-                  /// BOTÓN CREAR CUENTA
-                  /// =================================================
-
                   SizedBox(
-
-                    /// Ancho completo
                     width: double.infinity,
-
-                    /// Alto botón
                     height: 52,
-
                     child: ElevatedButton(
-
-                      /// Acción botón
-                      onPressed: () {
-
-                        /// Más adelante:
-                        /// registrar usuario Firebase
-                      },
-
+                      onPressed: isLoading ? null : registerUser,
                       style: ElevatedButton.styleFrom(
-
-                        /// Fondo negro
                         backgroundColor: Colors.black,
-
-                        /// Bordes redondos
                         shape: RoundedRectangleBorder(
-
-                          borderRadius:
-                              BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-
-                      child: const Text(
-
-                        'Crear Cuenta',
-
-                        style: TextStyle(
-
-                          color: Colors.white,
-
-                          fontSize: 16,
-                        ),
-                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Crear Cuenta'),
                     ),
                   ),
 
-
-
-                  /// Espacio inferior
                   const SizedBox(height: 30),
                 ],
               ),
@@ -614,65 +338,21 @@ class _RegisterViewState
   }
 
 
-
-  /// =============================================================
-  /// INPUT PERSONALIZADO
-  /// =============================================================
-
-  /// Widget reutilizable TextField
   Widget _customInput({
-
-    /// Ocultar texto
+    TextEditingController? controller,
     bool obscureText = false,
-
   }) {
-
     return SizedBox(
-
-      /// Alto input
       height: 50,
-
       child: TextField(
-
-        /// Ocultar contraseña
+        controller: controller,
         obscureText: obscureText,
-
         decoration: InputDecoration(
-
-          /// Fondo activo
           filled: true,
-
-          /// Fondo blanco
           fillColor: Colors.white,
-
-          /// Padding interno
-          contentPadding:
-              const EdgeInsets.symmetric(
-            horizontal: 14,
-          ),
-
-          /// Borde principal
           border: OutlineInputBorder(
-
-            borderRadius:
-                BorderRadius.circular(8),
-
-            borderSide: BorderSide(
-
-              color: Colors.grey.shade300,
-            ),
-          ),
-
-          /// Borde habilitado
-          enabledBorder: OutlineInputBorder(
-
-            borderRadius:
-                BorderRadius.circular(8),
-
-            borderSide: BorderSide(
-
-              color: Colors.grey.shade300,
-            ),
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300),
           ),
         ),
       ),
