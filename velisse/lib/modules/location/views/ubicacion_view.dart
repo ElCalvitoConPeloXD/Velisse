@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // 👉 Importa todo el sistema visual de Flutter (widgets, botones, layouts, etc)
 
-import '../modules/dashboard/views/dashboard_bookings_view.dart';
+import '../../dashboard/views/dashboard_bookings_view.dart';
 // 👉 Importa la pantalla Dashboard (a donde iremos después de guardar)
 
 

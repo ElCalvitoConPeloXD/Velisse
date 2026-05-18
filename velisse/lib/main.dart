@@ -1,22 +1,46 @@
 /// ===============================================================
 /// IMPORTACIONES
 /// ===============================================================
+
+/// library;
+///
+/// Opcional.
+/// Flutter normalmente NO necesita esto
+/// pero puedes dejarlo sin problema.
+library;
+
+
+/// ===============================================================
+/// IMPORTAR FIRST VIEW
+/// ===============================================================
+
+/// Pantalla onboarding/splash inicial
+///
+/// Esta será la primera pantalla
+/// que verá el usuario
 import 'package:velisse/modules/onboarding/views/first_view.dart';
-import 'package:velisse/modules/dashboard/views/dashboard_bookings_view.dart';
-/// Importa Flutter Material Design
+
+
+
+
+/// ===============================================================
+/// IMPORTAR FLUTTER MATERIAL
+/// ===============================================================
+
+/// Material Design Flutter
 ///
 /// Gracias a esto podemos usar:
 /// - MaterialApp
 /// - Scaffold
-/// - Text
 /// - AppBar
+/// - Text
 /// - Colors
 /// - etc
 import 'package:flutter/material.dart';
 
 
 /// ===============================================================
-/// FIREBASE
+/// IMPORTAR FIREBASE
 /// ===============================================================
 
 /// Firebase Core
@@ -25,21 +49,11 @@ import 'package:flutter/material.dart';
 ///
 /// Sin esto:
 /// Firebase.initializeApp()
-/// no funcionará
+/// NO funcionará
 import 'package:firebase_core/firebase_core.dart';
 
 
-/// ===============================================================
-/// IMPORTAR PANTALLAS
-/// ===============================================================
 
-/// Pantalla crear reservas
-///
-/// Esta pantalla:
-/// - crea reservas
-/// - verifica disponibilidad
-/// - valida horarios ocupados
-import 'package:velisse/modules/bookings/views/booking_calendar_view.dart';
 
 
 /// ===============================================================
@@ -47,17 +61,18 @@ import 'package:velisse/modules/bookings/views/booking_calendar_view.dart';
 /// ===============================================================
 
 /// main():
-/// punto de entrada principal Flutter
+///
+/// Punto de entrada principal Flutter
 void main() async {
 
   /// =============================================================
   /// INICIALIZAR FLUTTER
   /// =============================================================
 
-  /// Necesario antes de usar:
+  /// Necesario antes de:
   /// - Firebase
   /// - plugins
-  /// - async
+  /// - código async
   WidgetsFlutterBinding.ensureInitialized();
 
 
@@ -66,17 +81,21 @@ void main() async {
   /// INICIALIZAR FIREBASE
   /// =============================================================
 
-  /// Esperar conexión Firebase
+  /// Esperar inicialización Firebase
   await Firebase.initializeApp();
 
 
 
   /// =============================================================
-  /// INICIAR APP
+  /// EJECUTAR APP
   /// =============================================================
 
-  /// Ejecutar aplicación
-  runApp(const MyApp());
+  /// Iniciar aplicación Flutter
+  runApp(
+
+    /// Widget raíz principal
+    const MyApp(),
+  );
 }
 
 
@@ -86,7 +105,10 @@ void main() async {
 /// ===============================================================
 
 /// StatelessWidget:
-/// porque NO cambia dinámicamente
+///
+/// Se usa porque:
+/// la configuración principal
+/// NO cambia dinámicamente
 class MyApp extends StatelessWidget {
 
   /// Constructor
@@ -98,11 +120,19 @@ class MyApp extends StatelessWidget {
   /// BUILD
   /// =============================================================
 
+  /// build():
+  ///
+  /// construye toda la aplicación
   @override
   Widget build(BuildContext context) {
 
+    /// ===========================================================
+    /// MATERIAL APP
+    /// ===========================================================
+
     /// MaterialApp:
-    /// estructura principal app
+    ///
+    /// estructura principal Flutter
     return MaterialApp(
 
       /// =========================================================
@@ -115,10 +145,10 @@ class MyApp extends StatelessWidget {
 
 
       /// =========================================================
-      /// QUITAR BANNER DEBUG
+      /// OCULTAR BANNER DEBUG
       /// =========================================================
 
-      /// Oculta banner DEBUG rojo
+      /// Elimina banner rojo DEBUG
       debugShowCheckedModeBanner: false,
 
 
@@ -127,27 +157,40 @@ class MyApp extends StatelessWidget {
       /// TEMA GLOBAL
       /// =========================================================
 
+      /// Configuración visual global
       theme: ThemeData(
 
-        /// Color principal
+        /// Color principal Material
         primarySwatch: Colors.blue,
       ),
 
 
 
       /// =========================================================
-      /// PANTALLA INICIAL
+      /// HOME
       /// =========================================================
 
-      /// Abrir pantalla crear reserva
+      /// Pantalla inicial aplicación
       ///
-      /// Aquí podrás probar:
-      /// - crear reservas
-      /// - bloquear horarios repetidos
-      /// - validar disponibilidad
-      //home: const BookingCalendarView(),
-      //home: DashboardBookingsView(),
-      home: const FirstView(),
+      /// Actualmente:
+      /// onboarding/splash
+      home: FirstView(),
+
+
+
+
+      /// =========================================================
+      /// OPCIONES TEMPORALES
+      /// =========================================================
+
+      /// Para pruebas puedes usar:
+      ///
+
+      /// Pantalla reservas
+      // home: BookingCalendarView(),
+
+      /// Dashboard reservas
+      // home: DashboardBookingsView(),
     );
   }
 }

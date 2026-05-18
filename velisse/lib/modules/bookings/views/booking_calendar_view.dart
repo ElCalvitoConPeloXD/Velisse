@@ -1,6 +1,7 @@
 /// ===============================================================
 /// IMPORTACIONES
 /// ===============================================================
+library;
 
 /// Importa widgets Material Design
 ///
@@ -623,7 +624,7 @@ class _BookingCalendarViewState
             DropdownButtonFormField<String>(
 
               /// Valor actual seleccionado
-              value: selectedService.isEmpty
+              initialValue: selectedService.isEmpty
                   ? null
                   : selectedService,
 
@@ -684,7 +685,7 @@ class _BookingCalendarViewState
             DropdownButtonFormField<String>(
 
               /// Valor seleccionado
-              value: selectedProfessional.isEmpty
+              initialValue: selectedProfessional.isEmpty
                   ? null
                   : selectedProfessional,
 

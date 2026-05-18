@@ -1,6 +1,7 @@
 /// ===============================================================
 /// IMPORTACIONES
 /// ===============================================================
+library;
 
 /// Importa widgets Material Design
 import 'package:flutter/material.dart';
@@ -393,7 +394,7 @@ class _DashboardBookingsViewState
             DropdownButtonFormField<String>(
 
               /// Valor actual
-              value: selectedMainFilter,
+              initialValue: selectedMainFilter,
 
               /// Decoración
               decoration: InputDecoration(
@@ -455,7 +456,7 @@ class _DashboardBookingsViewState
               DropdownButtonFormField<String>(
 
                 /// Valor actual
-                value: selectedSubFilter.isEmpty
+                initialValue: selectedSubFilter.isEmpty
                     ? null
                     : selectedSubFilter,
 
@@ -512,7 +513,7 @@ class _DashboardBookingsViewState
               DropdownButtonFormField<String>(
 
                 /// Valor actual
-                value: selectedSubFilter.isEmpty
+                initialValue: selectedSubFilter.isEmpty
                     ? null
                     : selectedSubFilter,
 
