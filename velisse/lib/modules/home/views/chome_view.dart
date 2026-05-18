@@ -21,7 +21,7 @@ class _HomeViewState extends State<HomeView> {
     CalendarContent(), // Pantalla de calendario (puedes personalizarla)
     DatesContent(), // Pantalla de fecha (puedes personalizarla)
     NotificationsContent(), // Pantalla de notificaciones (puedes personalizarla)
-    ProfileContent(), // Pantalla de perfil (puedes personalizarla)
+    LogginView(), // Pantalla de perfil (puedes personalizarla)
   ];
 
   @override
