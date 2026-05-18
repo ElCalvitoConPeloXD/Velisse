@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../dashboard/views/dashboard_bookings_view.dart';
+// 🔥 IMPORT CORRECTO: tu dashboard real
+import '../../dashboard/views/dashboard_view.dart';
 
 class UbicacionView extends StatefulWidget {
 
-  final String businessId; // 👈 NECESARIO
+  final String businessId;
 
   const UbicacionView({
     super.key,
@@ -26,9 +27,7 @@ class _UbicacionViewState extends State<UbicacionView> {
 
     if (locationController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Ingresa una ubicación"),
-        ),
+        const SnackBar(content: Text("Ingresa una ubicación")),
       );
       return;
     }
@@ -37,29 +36,26 @@ class _UbicacionViewState extends State<UbicacionView> {
 
     try {
 
-      /// 🔥 ACTUALIZAR NEGOCIO
+      /// 🔥 GUARDAR UBICACIÓN EN FIRESTORE
       await FirebaseFirestore.instance
           .collection('businesses')
           .doc(widget.businessId)
           .update({
-
         "location": {
           "address": locationController.text.trim(),
         },
-
         "step": "done",
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Negocio configurado correctamente"),
-        ),
+        const SnackBar(content: Text("Negocio configurado correctamente")),
       );
 
+      /// 🚀 AQUÍ ESTÁ EL CAMBIO IMPORTANTE
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (_) => const DashboardBookingsView(),
+          builder: (_) => const DashboardView(),
         ),
         (route) => false,
       );
@@ -91,18 +87,13 @@ class _UbicacionViewState extends State<UbicacionView> {
             ),
           ),
 
-          Container(
-            color: Colors.black.withOpacity(0.2),
-          ),
+          Container(color: Colors.black.withOpacity(0.2)),
 
           SafeArea(
-
             child: Padding(
-
               padding: const EdgeInsets.symmetric(horizontal: 20),
 
               child: Column(
-
                 crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
@@ -145,14 +136,11 @@ class _UbicacionViewState extends State<UbicacionView> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-
                       onPressed: isLoading ? null : saveLocation,
-
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFB39DDB),
                         padding: const EdgeInsets.symmetric(vertical: 18),
                       ),
-
                       child: isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : const Text(

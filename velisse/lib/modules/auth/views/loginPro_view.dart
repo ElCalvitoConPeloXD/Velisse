@@ -1,14 +1,19 @@
-/// ===============================================================
+// ===============================================================
 /// IMPORTACIONES
-/// ===============================================================
+// ===============================================================
 library;
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:velisse/modules/home/views/home_view.dart';
+import 'package:velisse/modules/home/views/home_user_view.dart';
+import 'package:velisse/modules/dashboard/views/dashboard_view.dart';
+
 import 'package:velisse/modules/auth/views/createPro_view.dart';
 import 'package:velisse/modules/auth/views/login_view.dart';
+
 import '../../../widgets/fondo.dart';
 
 /// ===============================================================
@@ -22,14 +27,86 @@ class LogginProView extends StatefulWidget {
 }
 
 class _LogginProViewState extends State<LogginProView> {
+
   /// =============================================================
   /// CONTROLLERS
   /// =============================================================
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  bool isLoading = false;
+
   /// =============================================================
-  /// BUILD
+  /// LOGIN CON ROL
+  /// =============================================================
+  Future<void> login() async {
+    try {
+      setState(() => isLoading = true);
+
+      /// 🔐 1. LOGIN AUTH
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      final uid = credential.user!.uid;
+
+      /// 🔥 2. BUSCAR ROL EN FIRESTORE
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+
+      final role = doc.data()?['role'];
+
+      /// =========================================================
+      /// 3. REDIRECCIÓN SEGÚN ROL
+      /// =========================================================
+
+      if (role == 'owner') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const DashboardView(),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const HomeUserView(),
+          ),
+        );
+      }
+
+    } on FirebaseAuthException catch (e) {
+
+      String msg = 'Error al iniciar sesión';
+
+      if (e.code == 'user-not-found') {
+        msg = 'Usuario no encontrado';
+      }
+
+      if (e.code == 'wrong-password') {
+        msg = 'Contraseña incorrecta';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg)),
+      );
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  /// =============================================================
+  /// BUILD (TU DISEÑO SIN CAMBIOS)
   /// =============================================================
   @override
   Widget build(BuildContext context) {
@@ -101,9 +178,7 @@ class _LogginProViewState extends State<LogginProView> {
 
                     const SizedBox(height: 30),
 
-                    /// ===================================================
                     /// EMAIL
-                    /// ===================================================
                     TextField(
                       controller: emailController,
                       decoration: InputDecoration(
@@ -123,9 +198,7 @@ class _LogginProViewState extends State<LogginProView> {
 
                     const SizedBox(height: 16),
 
-                    /// ===================================================
                     /// PASSWORD
-                    /// ===================================================
                     TextField(
                       controller: passwordController,
                       obscureText: true,
@@ -146,50 +219,32 @@ class _LogginProViewState extends State<LogginProView> {
 
                     const SizedBox(height: 20),
 
-                    /// ===================================================
-                    /// LOGIN BOTÓN
-                    /// ===================================================
+                    /// BOTÓN LOGIN
                     SizedBox(
                       width: double.infinity,
                       height: 52,
                       child: ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            await FirebaseAuth.instance.signInWithEmailAndPassword(
-                              email: emailController.text.trim(),
-                              password: passwordController.text.trim(),
-                            );
+                        onPressed: isLoading ? null : login,
 
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const HomeView(),
-                              ),
-                            );
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Error: ${e.toString()}')),
-                            );
-                          }
-                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        child: const Text(
-                          'Continuar',
-                          style: TextStyle(color: Colors.white),
-                        ),
+
+                        child: isLoading
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text(
+                                'Continuar',
+                                style: TextStyle(color: Colors.white),
+                              ),
                       ),
                     ),
 
                     const SizedBox(height: 30),
 
-                    /// ===================================================
                     /// DIVIDER
-                    /// ===================================================
                     Row(
                       children: const [
                         Expanded(child: Divider()),
@@ -211,9 +266,6 @@ class _LogginProViewState extends State<LogginProView> {
 
                     const SizedBox(height: 50),
 
-                    /// ===================================================
-                    /// IR A CLIENTES
-                    /// ===================================================
                     const Text(
                       '¿Eres cliente y quieres reservar una cita?',
                     ),
@@ -240,9 +292,6 @@ class _LogginProViewState extends State<LogginProView> {
 
                     const SizedBox(height: 25),
 
-                    /// ===================================================
-                    /// IR A REGISTRO PROFESIONAL
-                    /// ===================================================
                     TextButton(
                       onPressed: () {
                         Navigator.push(

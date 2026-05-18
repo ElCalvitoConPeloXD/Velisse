@@ -1,21 +1,37 @@
+/// ===============================================================
+/// HOME CONTENT - DINÁMICO (FIRESTORE)
+/// ===============================================================
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import 'package:velisse/modules/business/views/business_detail_view.dart';
+
+/// ===============================================================
+/// WIDGET PRINCIPAL
+/// ===============================================================
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
+
+  Stream<QuerySnapshot> getBusinesses() {
+    return FirebaseFirestore.instance.collection('businesses').snapshots();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
 
             const SizedBox(height: 20),
 
-            // BUSCADOR
+            /// BUSCADOR
             TextField(
               decoration: InputDecoration(
                 hintText: 'Buscar...',
@@ -40,7 +56,6 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            // CATEGORÍAS (ARREGLADO)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -63,28 +78,78 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 280,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 0.75,
-              ),
-              items: [
-                _card('assets/images/img1.png', 'Magic Nails', 'Uñas', '4.8⭐'),
-                _card('assets/images/img2.png', 'Esencia Spa', 'Facial', '4.9⭐'),
-                _card('assets/images/img3.png', 'Clásico 21', 'Barbería', '4.8⭐'),
-              ],
+            StreamBuilder<QuerySnapshot>(
+              stream: getBusinesses(),
+
+              builder: (context, snapshot) {
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData) {
+                  return const Text("No se pudieron cargar negocios");
+                }
+
+                final docs = snapshot.data!.docs;
+
+                if (docs.isEmpty) {
+                  return const Text("No hay negocios registrados");
+                }
+
+                return CarouselSlider(
+                  options: CarouselOptions(
+                    height: 280,
+                    autoPlay: true,
+                    enlargeCenterPage: true,
+                    viewportFraction: 0.75,
+                  ),
+
+                  items: docs.map((doc) {
+
+                    final data = doc.data() as Map<String, dynamic>;
+
+                    final name = data['name'] ?? 'Sin nombre';
+                    final categories =
+                        data['categories'] as List<dynamic>? ?? [];
+                    final image = data['image'] ?? '';
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BusinessDetailView(
+                              businessId: doc.id,
+                            ),
+                          ),
+                        );
+                      },
+
+                      child: _card(
+                        image,
+                        name,
+                        categories.isNotEmpty
+                            ? categories.first
+                            : 'Servicio',
+                        '⭐ 4.8',
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  // =========================
-  // CATEGORÍAS (FIX)
-  // =========================
+  /// =============================================================
+  /// CATEGORÍA
+  /// =============================================================
   Widget _category(String img, String label) {
     return Column(
       children: [
@@ -103,13 +168,19 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  // =========================
-  // CARD (FIX REAL)
-  // =========================
-  Widget _card(String img, String title, String desc, String rating) {
+  /// =============================================================
+  /// CARD LIMPIO (SIN HORARIOS)
+  /// =============================================================
+  Widget _card(
+    String img,
+    String title,
+    String desc,
+    String rating,
+  ) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      width: 250, // 👈 TODOS IGUALES
+      width: 250,
+
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: Colors.white,
@@ -121,28 +192,39 @@ class HomeContent extends StatelessWidget {
           )
         ],
       ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+
         children: [
 
-          // IMAGEN FIJA
           ClipRRect(
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            child: Image.asset(
-              img,
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+
+            child: img.startsWith('http')
+                ? Image.network(
+                    img,
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    img,
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
           ),
 
           Padding(
             padding: const EdgeInsets.all(10),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+
               children: [
 
                 Text(

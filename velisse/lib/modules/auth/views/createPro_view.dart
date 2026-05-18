@@ -10,8 +10,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:velisse/modules/auth/views/login_view.dart';
 
-/// 👇 AQUÍ IMPORTAS TU HOME CON BARRA COMPLETA
-import 'package:velisse/modules/home/views/home_user_view.dart';
+/// 👇 CAMBIO IMPORTANTE: ahora va al flujo de creación de negocio
+import 'package:velisse/modules/business_settings/views/create_business_view.dart';
 
 import '../../../widgets/fondo.dart';
 
@@ -79,7 +79,7 @@ class _RegisterViewStatePro extends State<RegisterViewPro> {
 
       String uid = userCredential.user!.uid;
 
-      /// 2. GUARDAR EN FIRESTORE
+      /// 2. GUARDAR USUARIO EN FIRESTORE
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         "uid": uid,
         "nombre": nombreController.text.trim(),
@@ -95,21 +95,19 @@ class _RegisterViewStatePro extends State<RegisterViewPro> {
       );
 
       /// =========================================================
-      /// 
+      /// 🔥 CAMBIO CLAVE: IR AL FLUJO DE CREAR NEGOCIO
       /// =========================================================
 
       final user = FirebaseAuth.instance.currentUser;
 
-      /// SI YA ESTÁ LOGEADO → HOME CON BARRA COMPLETA
       if (user != null) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => const HomeUserView(),
+            builder: (_) => const CreateBusinessView(),
           ),
         );
       } else {
-        /// fallback por seguridad
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -128,7 +126,7 @@ class _RegisterViewStatePro extends State<RegisterViewPro> {
   }
 
   /// =============================================================
-  /// 
+  /// UI
   /// =============================================================
 
   @override

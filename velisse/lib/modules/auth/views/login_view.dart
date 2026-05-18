@@ -10,11 +10,12 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// DASHBOARD (🔥 CAMBIO: ahora es HOME LOGUEADO)
+/// DASHBOARD (CLIENTE LOGUEADO)
 import 'package:velisse/modules/home/views/home_user_view.dart';
 
-/// REGISTRO (TU CLASE REAL ES RegisterView)
+/// REGISTRO
 import 'package:velisse/modules/auth/views/createUser_view.dart';
 
 /// PROFESIONALES
@@ -43,18 +44,78 @@ class _LogginViewState extends State<LogginView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  /// ===============================================================
-  /// BUILD
-  /// ===============================================================
+  bool isLoading = false;
 
+  /// ===============================================================
+  /// LOGIN CON ROL
+  /// ===============================================================
+  Future<void> login() async {
+
+    try {
+      setState(() => isLoading = true);
+
+      /// 1. LOGIN FIREBASE AUTH
+      final cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      final uid = cred.user!.uid;
+
+      /// 2. BUSCAR USUARIO EN FIRESTORE
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+
+      final role = doc.data()?['role'];
+
+      /// 3. REDIRECCIÓN SEGÚN ROL
+      if (role == 'owner') {
+
+        /// 🚨 SI ES OWNER NO DEBERÍA ENTRAR AQUÍ
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Este login es solo para clientes'),
+          ),
+        );
+
+        await FirebaseAuth.instance.signOut();
+
+      } else {
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const HomeUserView(),
+          ),
+        );
+      }
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  /// ===============================================================
+  /// UI
+  /// ===============================================================
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.transparent,
 
       body: GradientBackground(
+
         child: SafeArea(
+
           child: SingleChildScrollView(
+
             padding: EdgeInsets.only(
               left: 24,
               right: 24,
@@ -67,8 +128,10 @@ class _LogginViewState extends State<LogginView> {
               ),
 
               child: IntrinsicHeight(
+
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+
                   children: [
 
                     const SizedBox(height: 10),
@@ -89,7 +152,6 @@ class _LogginViewState extends State<LogginView> {
                       style: TextStyle(
                         fontSize: 38,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
                       ),
                     ),
 
@@ -141,42 +203,8 @@ class _LogginViewState extends State<LogginView> {
                     SizedBox(
                       width: double.infinity,
                       height: 52,
-
                       child: ElevatedButton(
-                        onPressed: () async {
-                          try {
-
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                              email: emailController.text.trim(),
-                              password: passwordController.text.trim(),
-                            );
-
-                            // 🔥 CAMBIO ÚNICO
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const HomeUserView(),
-                              ),
-                            );
-
-                          } on FirebaseAuthException catch (e) {
-
-                            String msg = 'Error al iniciar sesión';
-
-                            if (e.code == 'user-not-found') {
-                              msg = 'Usuario no encontrado';
-                            }
-
-                            if (e.code == 'wrong-password') {
-                              msg = 'Contraseña incorrecta';
-                            }
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(msg)),
-                            );
-                          }
-                        },
+                        onPressed: isLoading ? null : login,
 
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
@@ -185,13 +213,12 @@ class _LogginViewState extends State<LogginView> {
                           ),
                         ),
 
-                        child: const Text(
-                          'Continuar',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: isLoading
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text(
+                                'Continuar',
+                                style: TextStyle(fontSize: 16),
+                              ),
                       ),
                     ),
 
@@ -206,13 +233,7 @@ class _LogginViewState extends State<LogginView> {
                           ),
                         );
                       },
-                      child: const Text(
-                        'Registrarse',
-                        style: TextStyle(
-                          color: Colors.purple,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: const Text('Registrarse'),
                     ),
 
                     const SizedBox(height: 30),
@@ -264,7 +285,6 @@ class _LogginViewState extends State<LogginView> {
                         'Inicia sesión como profesional',
                         style: TextStyle(
                           color: Colors.purple,
-                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
