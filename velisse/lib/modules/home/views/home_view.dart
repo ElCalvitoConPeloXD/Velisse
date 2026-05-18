@@ -1,124 +1,50 @@
-/// ===============================================================
-/// IMPORTACIONES
-/// ===============================================================
-library;
-
 import 'package:flutter/material.dart';
 
-/// 👇 ESTE IMPORT ES EL CLAVE (tu HomeContent real)
 import 'package:velisse/modules/home/widgets/home_content.dart';
-
-import 'package:velisse/modules/calendar/views/calendar_view.dart';
-import 'package:velisse/modules/dates/views/dates_view.dart';
-import 'package:velisse/modules/notifications/views/notifications_view.dart';
 import 'package:velisse/modules/auth/views/login_view.dart';
 
-/// ===============================================================
-/// HOME VIEW (INVITADO / NO LOGEADO O BASE)
-/// ===============================================================
-
 class HomeView extends StatefulWidget {
-  const HomeView({
-    super.key,
-    this.isLoggedIn = false,
-  });
-
-  final bool isLoggedIn;
+  const HomeView({super.key});
 
   @override
   State<HomeView> createState() => _HomeViewState();
 }
 
-/// ===============================================================
-/// STATE
-/// ===============================================================
-
 class _HomeViewState extends State<HomeView> {
-  int _currentIndex = 0;
+  int _index = 0;
 
-  late bool isLoggedIn;
-
-  @override
-  void initState() {
-    super.initState();
-    isLoggedIn = widget.isLoggedIn;
-  }
-
-  /// =============================================================
-  /// PANTALLAS DINÁMICAS
-  /// =============================================================
-
-  List<Widget> get _screens {
-    if (isLoggedIn) {
-      return [
-        const HomeContent(),
-        const CalendarContent(),
-        const DatesContent(),
-        const NotificationsContent(),
-        const LogginView(),
-      ];
-    }
-
-    return [
-      const HomeContent(),
-      const LogginView(),
-    ];
-  }
-
-  /// =============================================================
-  /// BUILD
-  /// =============================================================
+  final List<Widget> _screens = const [
+    HomeContent(),
+    LogginView(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: _screens[_index],
 
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        currentIndex: _index,
 
-        onTap: (index) {
+        onTap: (i) {
           setState(() {
-            _currentIndex = index;
+            _index = i;
           });
         },
 
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.grey,
 
-        items: isLoggedIn
-            ? const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Inicio',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month),
-                  label: 'Calendario',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.watch_later_outlined),
-                  label: 'Fechas',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: 'Notificaciones',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Perfil',
-                ),
-              ]
-            : const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Inicio',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Ingresar',
-                ),
-              ],
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Ingresar',
+          ),
+        ],
       ),
     );
   }

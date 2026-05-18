@@ -1,18 +1,18 @@
-/// ===============================================================
+// ===============================================================
 /// LOGIN VIEW
-/// ===============================================================
+// ===============================================================
 
 library;
 
-/// ===============================================================
+// ===============================================================
 /// IMPORTACIONES
-/// ===============================================================
+// ===============================================================
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// DASHBOARD
-import 'package:velisse/modules/home/views/home_view.dart';
+/// DASHBOARD (🔥 CAMBIO: ahora es HOME LOGUEADO)
+import 'package:velisse/modules/home/views/home_user_view.dart';
 
 /// REGISTRO (TU CLASE REAL ES RegisterView)
 import 'package:velisse/modules/auth/views/createUser_view.dart';
@@ -73,9 +73,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 10),
 
-                    /// ===================================================
-                    /// BACK
-                    /// ===================================================
                     Align(
                       alignment: Alignment.centerLeft,
                       child: IconButton(
@@ -86,9 +83,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 40),
 
-                    /// ===================================================
-                    /// TITULO
-                    /// ===================================================
                     const Text(
                       '¡Bienvenido de\nnuevo!',
                       textAlign: TextAlign.center,
@@ -113,9 +107,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 30),
 
-                    /// ===================================================
-                    /// EMAIL
-                    /// ===================================================
                     TextField(
                       controller: emailController,
                       decoration: InputDecoration(
@@ -131,9 +122,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 16),
 
-                    /// ===================================================
-                    /// PASSWORD
-                    /// ===================================================
                     TextField(
                       controller: passwordController,
                       obscureText: true,
@@ -150,9 +138,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 20),
 
-                    /// ===================================================
-                    /// BOTÓN CONTINUAR (LOGIN)
-                    /// ===================================================
                     SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -167,10 +152,11 @@ class _LogginViewState extends State<LogginView> {
                               password: passwordController.text.trim(),
                             );
 
+                            // 🔥 CAMBIO ÚNICO
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => const HomeView(),
+                                builder: (_) => const HomeUserView(),
                               ),
                             );
 
@@ -211,9 +197,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 12),
 
-                    /// ===================================================
-                    /// BOTÓN REGISTRARSE
-                    /// ===================================================
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -234,9 +217,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 30),
 
-                    /// ===================================================
-                    /// DIVIDER
-                    /// ===================================================
                     Row(
                       children: const [
                         Expanded(child: Divider(color: Colors.grey)),
@@ -250,9 +230,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 25),
 
-                    /// ===================================================
-                    /// TÉRMINOS
-                    /// ===================================================
                     const Text(
                       'Al hacer clic en continuar, aceptas nuestros Términos de servicio y Política de privacidad',
                       textAlign: TextAlign.center,
@@ -264,9 +241,6 @@ class _LogginViewState extends State<LogginView> {
 
                     const SizedBox(height: 50),
 
-                    /// ===================================================
-                    /// PROFESIONALES
-                    /// ===================================================
                     const Text(
                       '¿Tienes una cuenta de empresa?',
                       style: TextStyle(

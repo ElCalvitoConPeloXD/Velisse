@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:velisse/modules/auth/views/login_view.dart';
-import 'package:velisse/modules/business_settings/views/create_business_view.dart';
 
 /// 👇 AQUÍ IMPORTAS TU HOME CON BARRA COMPLETA
 import 'package:velisse/modules/home/views/home_user_view.dart';
@@ -96,7 +95,7 @@ class _RegisterViewStatePro extends State<RegisterViewPro> {
       );
 
       /// =========================================================
-      /// 🔥 AQUÍ VA EL CAMBIO IMPORTANTE
+      /// 
       /// =========================================================
 
       final user = FirebaseAuth.instance.currentUser;
@@ -129,7 +128,7 @@ class _RegisterViewStatePro extends State<RegisterViewPro> {
   }
 
   /// =============================================================
-  /// UI (NO TOCADA, SOLO RESUMIDA AQUÍ)
+  /// 
   /// =============================================================
 
   @override

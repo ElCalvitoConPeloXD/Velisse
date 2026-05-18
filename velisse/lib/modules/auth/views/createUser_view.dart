@@ -22,10 +22,10 @@ import 'package:flutter/material.dart';
 import 'package:velisse/modules/auth/views/login_view.dart';
 
 // ===============================================================
-/// IMPORTAR HOME VIEW
+/// IMPORTAR HOME USER VIEW (🔥 CAMBIO IMPORTANTE)
 // ===============================================================
 
-import 'package:velisse/modules/home/views/home_view.dart';
+import 'package:velisse/modules/home/views/home_user_view.dart';
 
 // ===============================================================
 /// IMPORTAR FONDO PERSONALIZADO
@@ -134,13 +134,13 @@ class _RegisterViewState extends State<RegisterView> {
       );
 
       // =========================================================
-      // 🔥 FIX REAL (ESTO ES LO QUE ROMPÍA TU APP)
+      // 🔥 ÚNICO CAMBIO REAL (HOME LOGUEADO)
       // =========================================================
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomeView(),
+          builder: (context) => const HomeUserView(),
         ),
       );
 
@@ -157,7 +157,7 @@ class _RegisterViewState extends State<RegisterView> {
 
 
   // =============================================================
-  // UI (NO TOCADO - EXACTAMENTE TUYO)
+  // UI (NO TOCADO)
   // =============================================================
 
   @override
